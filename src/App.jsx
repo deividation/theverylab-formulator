@@ -29,11 +29,11 @@ const getPrice = (qty) => {
 };
 
 const CATEGORIES = [
-  { id: "women",     label: "Moterims",   sub: "Veido ir kuno prieziura",        icon: "â¯" },
-  { id: "men",       label: "Vyrams",     sub: "Skutimosi, barzdos ir plaukai",   icon: "â»" },
-  { id: "pets",      label: "Gyvunams",   sub: "Šunims, katems ir kt.",           icon: "â" },
-  { id: "fragrance", label: "Kvepalai",   sub: "EDP, EDT, kuno dulksna ir kt.",   icon: "â" },
-  { id: "home",      label: "Namu kvapai",sub: "Žvakes, difuzoriai, purškikliai", icon: "â³" },
+  { id: "women",     label: "Moterims",   sub: "Veido ir kuno prieziura",        icon: "◯" },
+  { id: "men",       label: "Vyrams",     sub: "Skutimosi, barzdos ir plaukai",   icon: "◻" },
+  { id: "pets",      label: "Gyvunams",   sub: "Šunims, katems ir kt.",           icon: "◇" },
+  { id: "fragrance", label: "Kvepalai",   sub: "EDP, EDT, kuno dulksna ir kt.",   icon: "◎" },
+  { id: "home",      label: "Namu kvapai",sub: "Žvakes, difuzoriai, purškikliai", icon: "△" },
 ];
 
 const PRODUCTS_BY_CAT = {
@@ -209,8 +209,8 @@ function PricingStep({ onBack, onNext, pricing, setPricing }) {
                 color: active ? C.white : C.black,
                 cursor: "pointer", transition: "all 0.15s", fontWeight: active ? 600 : 400,
               }}>
-              {t.label} â {t.price.toFixed(2)} EUR
-              {t.popular && !active && <span style={{ marginLeft: "0.3rem", fontSize: "0.62rem", color: C.red, fontWeight: 600 }}>â</span>}
+              {t.label} — {t.price.toFixed(2)} EUR
+              {t.popular && !active && <span style={{ marginLeft: "0.3rem", fontSize: "0.62rem", color: C.red, fontWeight: 600 }}>★</span>}
             </button>
           );
         })}
@@ -245,7 +245,7 @@ const PACKAGING_CATALOG = [
   { id:"laurence",    name:"LAURENCE",              type:"Stiklinis indelis",   material:"Stiklas",             sizes:["15ml","30ml","50ml","100ml","200ml"], tags:["kremas","indelis","stiklas"],       eco:false, note:"Klasikinis cilindrinis" },
   { id:"laurencefl",  name:"LAURENCE FLAT",          type:"Stiklinis indelis",   material:"Stiklas",             sizes:["15ml","30ml","50ml"],                 tags:["kremas","indelis","stiklas"],       eco:false, note:"Plokščias, elegantiškas" },
   { id:"vittoria",    name:"VITTORIA",               type:"Stiklinis indelis",   material:"Stiklas",             sizes:["30ml","50ml","100ml"],                tags:["kremas","indelis","stiklas"],       eco:false, note:"Apvalus, klasikinis" },
-  { id:"licata",      name:"LICATA",                 type:"Stiklinis indelis",   material:"Stiklas (90% perdirbtas)", sizes:["50ml","100ml","200ml"],          tags:["kremas","indelis","stiklas","eco"], eco:true,  note:"90% perdirbtas stiklas â ekologiškas pasirinkimas" },
+  { id:"licata",      name:"LICATA",                 type:"Stiklinis indelis",   material:"Stiklas (90% perdirbtas)", sizes:["50ml","100ml","200ml"],          tags:["kremas","indelis","stiklas","eco"], eco:true,  note:"90% perdirbtas stiklas — ekologiškas pasirinkimas" },
   { id:"giotto",      name:"GIOTTO",                 type:"Stiklinis indelis",   material:"Stiklas",             sizes:["30ml","50ml","100ml"],                tags:["kremas","indelis","stiklas"],       eco:false, note:"Modernios linijos" },
   { id:"boldjar",     name:"BOLD",                   type:"Stiklinis indelis",   material:"Stiklas",             sizes:["30ml","50ml","100ml","200ml"],        tags:["kremas","indelis","stiklas"],       eco:false, note:"Stačiakampis, premium" },
   { id:"opale",       name:"OPALE",                  type:"Stiklinis indelis",   material:"Stiklas",             sizes:["30ml","50ml"],                        tags:["kremas","indelis","stiklas"],       eco:false, note:"Subtilaus dizaino" },
@@ -258,34 +258,34 @@ const PACKAGING_CATALOG = [
   { id:"kless",       name:"KLESS",                  type:"Stiklinis buteliukas",material:"Stiklas",             sizes:["30ml","50ml","100ml","200ml"],        tags:["serumas","losjonas","stiklas"],     eco:false, note:"Šiuolaikiškas profilis" },
   { id:"vogue",       name:"VOGUE",                  type:"Stiklinis buteliukas",material:"Stiklas",             sizes:["30ml","50ml","100ml"],                tags:["serumas","tonikas","stiklas"],     eco:false, note:"Kvadratinis, prabangus" },
   // PERFUME BOTTLES
-  { id:"bazilleperf", name:"BAZILLE / BAZILLE RETRO",type:"Kvepalų buteliukas",  material:"Stiklas",             sizes:["30ml","50ml","100ml"],                tags:["kvepalai","edp","edt"],             eco:false, note:"FEA15 â klasikinis" },
-  { id:"penny",       name:"PENNY",                  type:"Kvepalų buteliukas",  material:"Stiklas",             sizes:["30ml","50ml","100ml"],                tags:["kvepalai","edp","edt"],             eco:false, note:"FEA15 â apvalus" },
-  { id:"picasso",     name:"PICASSO",                type:"Kvepalų buteliukas",  material:"Stiklas",             sizes:["30ml","50ml","100ml"],                tags:["kvepalai","edp","edt"],             eco:false, note:"FEA15 â modernaus dizaino" },
-  { id:"bruce",       name:"BRUCE",                  type:"Kvepalų buteliukas",  material:"Stiklas",             sizes:["30ml","50ml","100ml"],                tags:["kvepalai","edp","edt"],             eco:false, note:"FEA15 â stačiakampis" },
-  { id:"signal",      name:"SIGNAL",                 type:"Kvepalų buteliukas",  material:"Stiklas",             sizes:["50ml","100ml"],                       tags:["kvepalai","edp","edt"],             eco:false, note:"FEA15 â geometrinis" },
-  { id:"victoria",    name:"VICTORIA",               type:"Kvepalų buteliukas",  material:"Stiklas",             sizes:["50ml","100ml"],                       tags:["kvepalai","edp","edt"],             eco:false, note:"FEA15 â moteriškas" },
-  { id:"wood",        name:"WOOD",                   type:"Kvepalų buteliukas",  material:"Stiklas + medis",     sizes:["50ml","100ml"],                       tags:["kvepalai","edp","edt"],             eco:false, note:"FEA15 â mediniai aksesuarai" },
+  { id:"bazilleperf", name:"BAZILLE / BAZILLE RETRO",type:"Kvepalų buteliukas",  material:"Stiklas",             sizes:["30ml","50ml","100ml"],                tags:["kvepalai","edp","edt"],             eco:false, note:"FEA15 — klasikinis" },
+  { id:"penny",       name:"PENNY",                  type:"Kvepalų buteliukas",  material:"Stiklas",             sizes:["30ml","50ml","100ml"],                tags:["kvepalai","edp","edt"],             eco:false, note:"FEA15 — apvalus" },
+  { id:"picasso",     name:"PICASSO",                type:"Kvepalų buteliukas",  material:"Stiklas",             sizes:["30ml","50ml","100ml"],                tags:["kvepalai","edp","edt"],             eco:false, note:"FEA15 — modernaus dizaino" },
+  { id:"bruce",       name:"BRUCE",                  type:"Kvepalų buteliukas",  material:"Stiklas",             sizes:["30ml","50ml","100ml"],                tags:["kvepalai","edp","edt"],             eco:false, note:"FEA15 — stačiakampis" },
+  { id:"signal",      name:"SIGNAL",                 type:"Kvepalų buteliukas",  material:"Stiklas",             sizes:["50ml","100ml"],                       tags:["kvepalai","edp","edt"],             eco:false, note:"FEA15 — geometrinis" },
+  { id:"victoria",    name:"VICTORIA",               type:"Kvepalų buteliukas",  material:"Stiklas",             sizes:["50ml","100ml"],                       tags:["kvepalai","edp","edt"],             eco:false, note:"FEA15 — moteriškas" },
+  { id:"wood",        name:"WOOD",                   type:"Kvepalų buteliukas",  material:"Stiklas + medis",     sizes:["50ml","100ml"],                       tags:["kvepalai","edp","edt"],             eco:false, note:"FEA15 — mediniai aksesuarai" },
   // HOME DIFFUSERS
-  { id:"mystic",      name:"MYSTIC",                 type:"Difuzoriaus buteliukas",material:"Stiklas",           sizes:["100ml","200ml","500ml"],              tags:["difuzorius","namu"],                eco:false, note:"EU6 â klasikinis" },
-  { id:"myka",        name:"MYKA",                   type:"Difuzoriaus buteliukas",material:"Stiklas",           sizes:["100ml","200ml"],                      tags:["difuzorius","namu"],                eco:false, note:"EU6 â modernus" },
-  { id:"zen",         name:"ZENITH",                 type:"Difuzoriaus buteliukas",material:"Stiklas",           sizes:["100ml","200ml","500ml"],              tags:["difuzorius","namu"],                eco:false, note:"EU6 â minimalistinis" },
-  { id:"themis",      name:"THEMIS",                 type:"Difuzoriaus buteliukas",material:"Stiklas",           sizes:["250ml","500ml"],                      tags:["difuzorius","namu"],                eco:false, note:"EU6 â didelio tūrio" },
+  { id:"mystic",      name:"MYSTIC",                 type:"Difuzoriaus buteliukas",material:"Stiklas",           sizes:["100ml","200ml","500ml"],              tags:["difuzorius","namu"],                eco:false, note:"EU6 — klasikinis" },
+  { id:"myka",        name:"MYKA",                   type:"Difuzoriaus buteliukas",material:"Stiklas",           sizes:["100ml","200ml"],                      tags:["difuzorius","namu"],                eco:false, note:"EU6 — modernus" },
+  { id:"zen",         name:"ZENITH",                 type:"Difuzoriaus buteliukas",material:"Stiklas",           sizes:["100ml","200ml","500ml"],              tags:["difuzorius","namu"],                eco:false, note:"EU6 — minimalistinis" },
+  { id:"themis",      name:"THEMIS",                 type:"Difuzoriaus buteliukas",material:"Stiklas",           sizes:["250ml","500ml"],                      tags:["difuzorius","namu"],                eco:false, note:"EU6 — didelio tūrio" },
   // PLASTIC BOTTLES
-  { id:"cilindroalt", name:"CILINDRO ALTO SLIM",     type:"Plastikinis buteliukas",material:"HDPE / PET",        sizes:["100ml","200ml","300ml","500ml"],      tags:["šampūnas","losjonas","plastika"],   eco:false, note:"Cilindrinis â šampūnams, losjonams" },
-  { id:"sirioalto",   name:"SIRIO ALTO SLIM",        type:"Plastikinis buteliukas",material:"PET",               sizes:["100ml","200ml","300ml","500ml"],      tags:["šampūnas","losjonas","plastika"],   eco:false, note:"PET â šviesos ir lengvas" },
-  { id:"mousse",      name:"MOUSSE",                 type:"Plastikinis buteliukas",material:"PP",                sizes:["150ml","200ml","250ml"],              tags:["putų","šampūnas","plastika"],       eco:false, note:"40SP â putos pompa" },
+  { id:"cilindroalt", name:"CILINDRO ALTO SLIM",     type:"Plastikinis buteliukas",material:"HDPE / PET",        sizes:["100ml","200ml","300ml","500ml"],      tags:["šampūnas","losjonas","plastika"],   eco:false, note:"Cilindrinis — šampūnams, losjonams" },
+  { id:"sirioalto",   name:"SIRIO ALTO SLIM",        type:"Plastikinis buteliukas",material:"PET",               sizes:["100ml","200ml","300ml","500ml"],      tags:["šampūnas","losjonas","plastika"],   eco:false, note:"PET — šviesos ir lengvas" },
+  { id:"mousse",      name:"MOUSSE",                 type:"Plastikinis buteliukas",material:"PP",                sizes:["150ml","200ml","250ml"],              tags:["putų","šampūnas","plastika"],       eco:false, note:"40SP — putos pompa" },
   { id:"boldplbot",   name:"BOLD (plastika)",        type:"Plastikinis buteliukas",material:"PP / PET",          sizes:["100ml","200ml"],                      tags:["losjonas","plastika"],              eco:false, note:"Stačiakampis PP" },
   // PLASTIC JARS
   { id:"boldpljr",    name:"BOLD (plastikinis indelis)",type:"Plastikinis indelis",material:"PP",               sizes:["30ml","50ml","100ml","200ml"],        tags:["kremas","indelis","plastika"],      eco:false, note:"Stačiakampis PP" },
   { id:"elsa",        name:"ELSA",                   type:"Plastikinis indelis",  material:"PP",                sizes:["30ml","50ml","100ml"],                tags:["kremas","indelis","plastika"],      eco:false, note:"Apvalus PP" },
   // AIRLESS
-  { id:"parigiair",   name:"PARIGI AIRLESS",         type:"Airless buteliukas",   material:"PP (Airless)",       sizes:["15ml","30ml","50ml"],                 tags:["serumas","kremas","airless"],       eco:false, note:"Apsaugo nuo oksidacijos â aktyvūs ingredientai" },
+  { id:"parigiair",   name:"PARIGI AIRLESS",         type:"Airless buteliukas",   material:"PP (Airless)",       sizes:["15ml","30ml","50ml"],                 tags:["serumas","kremas","airless"],       eco:false, note:"Apsaugo nuo oksidacijos — aktyvūs ingredientai" },
   { id:"elixirair",   name:"ELIXIR AIRLESS",         type:"Airless buteliukas",   material:"PP (Airless)",       sizes:["30ml","50ml"],                        tags:["serumas","kremas","airless"],       eco:false, note:"Elegantiškas airless" },
   { id:"easyair",     name:"EASY AIRLESS",           type:"Airless buteliukas",   material:"PP (Airless)",       sizes:["30ml","50ml","100ml"],                tags:["serumas","kremas","airless"],       eco:false, note:"Universalus airless" },
   { id:"trentair",    name:"TRENT AIRLESS",          type:"Airless buteliukas",   material:"PP (Airless)",       sizes:["30ml","50ml","100ml"],                tags:["serumas","kremas","airless"],       eco:false, note:"Premium airless" },
   // ALUMINIUM
-  { id:"alubot",      name:"Aliuminio buteliukas",   type:"Aliuminio buteliukas", material:"Aliuminis",          sizes:["50ml","100ml","150ml","200ml"],       tags:["losjonas","šampūnas","aliuminis"],  eco:true,  note:"100% perdirbamas â tvarumo simbolis" },
-  { id:"alujr",       name:"Aliuminio indelis",      type:"Aliuminio indelis",    material:"Aliuminis",          sizes:["15ml","30ml","50ml"],                 tags:["kremas","indelis","aliuminis"],     eco:true,  note:"100% perdirbamas â premium jausmas" },
+  { id:"alubot",      name:"Aliuminio buteliukas",   type:"Aliuminio buteliukas", material:"Aliuminis",          sizes:["50ml","100ml","150ml","200ml"],       tags:["losjonas","šampūnas","aliuminis"],  eco:true,  note:"100% perdirbamas — tvarumo simbolis" },
+  { id:"alujr",       name:"Aliuminio indelis",      type:"Aliuminio indelis",    material:"Aliuminis",          sizes:["15ml","30ml","50ml"],                 tags:["kremas","indelis","aliuminis"],     eco:true,  note:"100% perdirbamas — premium jausmas" },
 ];
 
 // Smart packaging filter by product type
@@ -354,7 +354,7 @@ const getPkgPrice = (type, ml) => {
 
 // SVG illustrations for each packaging type
 const PKG_SVG = {
-  // Stiklinis indelis â wide cream jar with flat lid, subtle shoulder
+  // Stiklinis indelis — wide cream jar with flat lid, subtle shoulder
   "Stiklinis indelis": (sel) => {
     const s = sel ? "#9F132D" : "#999";
     const f = sel ? "rgba(159,19,45,0.07)" : "rgba(180,180,180,0.12)";
@@ -376,7 +376,7 @@ const PKG_SVG = {
     );
   },
 
-  // Stiklinis buteliukas â tall serum bottle with dropper neck
+  // Stiklinis buteliukas — tall serum bottle with dropper neck
   "Stiklinis buteliukas": (sel) => {
     const s = sel ? "#9F132D" : "#999";
     const f = sel ? "rgba(159,19,45,0.07)" : "rgba(180,180,180,0.12)";
@@ -397,7 +397,7 @@ const PKG_SVG = {
     );
   },
 
-  // Kvepalų buteliukas â rectangular perfume flacon with spray collar
+  // Kvepalų buteliukas — rectangular perfume flacon with spray collar
   "Kvepalų buteliukas": (sel) => {
     const s = sel ? "#9F132D" : "#999";
     const f = sel ? "rgba(159,19,45,0.07)" : "rgba(180,180,180,0.12)";
@@ -410,7 +410,7 @@ const PKG_SVG = {
         <rect x="24" y="20" width="32" height="7" rx="1" fill={sel?"rgba(159,19,45,0.15)":"rgba(140,140,140,0.2)"} stroke={s} strokeWidth="1.1"/>
         {/* neck */}
         <rect x="33" y="26" width="14" height="7" rx="0" fill={f} stroke={s} strokeWidth="1.1"/>
-        {/* body â slightly tapered top */}
+        {/* body — slightly tapered top */}
         <path d="M20 33 L20 96 Q20 100 24 100 L56 100 Q60 100 60 96 L60 33 Z" fill={f} stroke={s} strokeWidth="1.3"/>
         {/* shine */}
         <rect x="22" y="34" width="7" height="62" rx="2" fill={shine} opacity="0.4"/>
@@ -420,7 +420,7 @@ const PKG_SVG = {
     );
   },
 
-  // Difuzoriaus buteliukas â round diffuser bottle with reed sticks
+  // Difuzoriaus buteliukas — round diffuser bottle with reed sticks
   "Difuzoriaus buteliukas": (sel) => {
     const s = sel ? "#9F132D" : "#999";
     const f = sel ? "rgba(159,19,45,0.07)" : "rgba(180,180,180,0.12)";
@@ -445,7 +445,7 @@ const PKG_SVG = {
     );
   },
 
-  // Plastikinis buteliukas â pump dispenser bottle (like shampoo)
+  // Plastikinis buteliukas — pump dispenser bottle (like shampoo)
   "Plastikinis buteliukas": (sel) => {
     const s = sel ? "#9F132D" : "#999";
     const f = sel ? "rgba(159,19,45,0.07)" : "rgba(180,180,180,0.12)";
@@ -467,7 +467,7 @@ const PKG_SVG = {
     );
   },
 
-  // Plastikinis indelis â wide plastic jar with screw lid
+  // Plastikinis indelis — wide plastic jar with screw lid
   "Plastikinis indelis": (sel) => {
     const s = sel ? "#9F132D" : "#999";
     const f = sel ? "rgba(159,19,45,0.07)" : "rgba(180,180,180,0.12)";
@@ -488,7 +488,7 @@ const PKG_SVG = {
     );
   },
 
-  // Airless buteliukas â airless pump bottle with visible piston line
+  // Airless buteliukas — airless pump bottle with visible piston line
   "Airless buteliukas": (sel) => {
     const s = sel ? "#9F132D" : "#999";
     const f = sel ? "rgba(159,19,45,0.07)" : "rgba(180,180,180,0.12)";
@@ -504,7 +504,7 @@ const PKG_SVG = {
         <rect x="23" y="29" width="34" height="68" rx="4" fill={f} stroke={s} strokeWidth="1.3"/>
         {/* shine */}
         <rect x="25" y="30" width="7" height="66" rx="3" fill="white" opacity={sel?0.22:0.38}/>
-        {/* piston line â key airless detail */}
+        {/* piston line — key airless detail */}
         <line x1="23" y1="76" x2="57" y2="76" stroke={s} strokeWidth="1.5" strokeDasharray="3 2" opacity="0.5"/>
         {/* label */}
         <rect x="29" y="38" width="22" height="28" rx="1" fill="none" stroke={s} strokeWidth="0.7" opacity="0.35"/>
@@ -512,7 +512,7 @@ const PKG_SVG = {
     );
   },
 
-  // Aliuminio buteliukas â cylindrical alu bottle with rolled shoulder
+  // Aliuminio buteliukas — cylindrical alu bottle with rolled shoulder
   "Aliuminio buteliukas": (sel) => {
     const s = sel ? "#9F132D" : "#888";
     const f = sel ? "rgba(159,19,45,0.09)" : "rgba(160,160,160,0.18)";
@@ -522,7 +522,7 @@ const PKG_SVG = {
         <rect x="28" y="5" width="24" height="14" rx="4" fill={sel?"rgba(159,19,45,0.22)":"rgba(140,140,140,0.3)"} stroke={s} strokeWidth="1.3"/>
         {/* shoulder */}
         <path d="M28 19 Q24 22 24 28 L24 97 Q24 100 27 100 L53 100 Q56 100 56 97 L56 28 Q56 22 52 19 Z" fill={f} stroke={s} strokeWidth="1.3"/>
-        {/* metallic shine â two strips for alu feel */}
+        {/* metallic shine — two strips for alu feel */}
         <rect x="26" y="28" width="5" height="68" rx="2" fill="white" opacity={sel?0.28:0.5}/>
         <rect x="49" y="28" width="3" height="68" rx="1" fill="white" opacity={sel?0.15:0.28}/>
         {/* seam line */}
@@ -533,7 +533,7 @@ const PKG_SVG = {
     );
   },
 
-  // Aliuminio indelis â wide alu jar
+  // Aliuminio indelis — wide alu jar
   "Aliuminio indelis": (sel) => {
     const s = sel ? "#9F132D" : "#888";
     const f = sel ? "rgba(159,19,45,0.09)" : "rgba(160,160,160,0.18)";
@@ -617,7 +617,7 @@ function PackagingStep({ onBack, onNext, productType, packaging, setPackaging, s
 
       {filtered.length === 0 && (
         <div style={{ padding: "2rem", textAlign: "center", opacity: 0.4, fontSize: "0.88rem" }}>
-          {"Šiam produktui pakuočių kataloge nėra â laboratorija pasiūlys variantus konsultacijos metu."}
+          {"Šiam produktui pakuočių kataloge nėra — laboratorija pasiūlys variantus konsultacijos metu."}
         </div>
       )}
 
@@ -637,7 +637,7 @@ function PackagingStep({ onBack, onNext, productType, packaging, setPackaging, s
                 <div style={{ position: "absolute", top: "0.5rem", right: "0.5rem", background: "#2d7a3a", color: C.white, fontSize: "0.58rem", padding: "0.15rem 0.5rem", fontWeight: 700, letterSpacing: "0.06em", zIndex: 2 }}>ECO</div>
               )}
               {sel && (
-                <div style={{ position: "absolute", top: "0.5rem", left: "0.5rem", background: C.red, color: C.white, fontSize: "0.7rem", width: "20px", height: "20px", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 700, zIndex: 2 }}>{"â"}</div>
+                <div style={{ position: "absolute", top: "0.5rem", left: "0.5rem", background: C.red, color: C.white, fontSize: "0.7rem", width: "20px", height: "20px", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 700, zIndex: 2 }}>{"✓"}</div>
               )}
 
               {/* SVG */}
@@ -707,8 +707,8 @@ function PackagingStep({ onBack, onNext, productType, packaging, setPackaging, s
       )}
 
       <div style={{ display: "flex", gap: "1rem" }}>
-        <button className="btn ghost" onClick={onBack}>{"â Atgal"}</button>
-        <button className="btn" onClick={onNext}>{packaging.length > 0 ? "Testi â" : "Praleisti â"}</button>
+        <button className="btn ghost" onClick={onBack}>{"← Atgal"}</button>
+        <button className="btn" onClick={onNext}>{packaging.length > 0 ? "Testi →" : "Praleisti →"}</button>
       </div>
     </div>
   );
@@ -731,7 +731,7 @@ function EarningsCalc({ costPerUnit, qty, packaging, selectedSizes }) {
     return total / packaging.length;
   })();
 
-  const labelCost = 0.20;  // etiketė: ~0.15â0.30 EUR/vnt
+  const labelCost = 0.20;  // etiketė: ~0.15–0.30 EUR/vnt
 
   const fullCost = formulaCost + pkgCostPerUnit + labelCost;
 
@@ -875,7 +875,7 @@ function EarningsCalc({ costPerUnit, qty, packaging, selectedSizes }) {
           <div style={{ background:C.cream, border:"1.5px solid rgba(0,0,0,0.08)", padding:"1rem 1.2rem", marginBottom:"1.5rem", fontSize:"0.82rem", lineHeight:1.7 }}>
             <strong>{"Break-even: "}</strong>
             {Math.ceil((fullCost * totalQty) / margin).toLocaleString("lt-LT") + " vnt"}
-            {" â parduokite tiek ir susigrąžinate visą investiciją."}
+            {" — parduokite tiek ir susigrąžinate visą investiciją."}
           </div>
         )}
 
@@ -884,11 +884,11 @@ function EarningsCalc({ costPerUnit, qty, packaging, selectedSizes }) {
           <div style={{ fontSize:"0.68rem", letterSpacing:"0.1em", textTransform:"uppercase", opacity:0.4, marginBottom:"0.8rem" }}>Rinkos pavyzdžiai</div>
           <div style={{ display:"flex", flexDirection:"column", gap:"0.4rem" }}>
             {[
-              { label:"Masinis / FMCG", range:"15â18 EUR", margin:"~6â9 EUR/vnt", color:"#888" },
-              { label:"Vidutinis segmentas", range:"20â30 EUR", margin:"~11â21 EUR/vnt", color:"#b07d3a" },
-              { label:"Premium linija", range:"35â50 EUR", margin:"~26â41 EUR/vnt", color:C.red },
-              { label:"Aukštas segmentas", range:"55â75 EUR", margin:"~46â66 EUR/vnt", color:"#7a2d8c" },
-              { label:"Luxury / Niche", range:"80â100+ EUR", margin:"~71â91+ EUR/vnt", color:"#1a1a1a" },
+              { label:"Masinis / FMCG", range:"15–18 EUR", margin:"~6–9 EUR/vnt", color:"#888" },
+              { label:"Vidutinis segmentas", range:"20–30 EUR", margin:"~11–21 EUR/vnt", color:"#b07d3a" },
+              { label:"Premium linija", range:"35–50 EUR", margin:"~26–41 EUR/vnt", color:C.red },
+              { label:"Aukštas segmentas", range:"55–75 EUR", margin:"~46–66 EUR/vnt", color:"#7a2d8c" },
+              { label:"Luxury / Niche", range:"80–100+ EUR", margin:"~71–91+ EUR/vnt", color:"#1a1a1a" },
             ].map((row, i) => (
               <div key={i} style={{ display:"flex", alignItems:"center", gap:"0.8rem", padding:"0.5rem 0.8rem", background: sellPrice >= [15,20,35,55,80][i] && sellPrice < [19,35,55,80,101][i] ? row.color + "12" : "transparent", borderLeft: "3px solid " + (sellPrice >= [15,20,35,55,80][i] && sellPrice < [19,35,55,80,101][i] ? row.color : "transparent"), transition:"all 0.2s" }}>
                 <div style={{ width:"8px", height:"8px", borderRadius:"50%", background:row.color, flexShrink:0 }} />
@@ -902,7 +902,7 @@ function EarningsCalc({ costPerUnit, qty, packaging, selectedSizes }) {
 
         {/* Shelf life highlight */}
         <div style={{ background:C.red, color:C.white, padding:"1rem 1.3rem", display:"flex", gap:"1.2rem", alignItems:"center" }}>
-          <div style={{ fontSize:"2rem", opacity:0.85, flexShrink:0 }}>{"â±"}</div>
+          <div style={{ fontSize:"2rem", opacity:0.85, flexShrink:0 }}>{"⏱"}</div>
           <div>
             <div style={{ fontWeight:700, fontSize:"0.95rem", marginBottom:"0.2rem" }}>{"2 metų galiojimas"}</div>
             <div style={{ fontSize:"0.78rem", opacity:0.75, lineHeight:1.5 }}>
@@ -970,49 +970,49 @@ export default function App() {
 Ši formuluotė sukurta specialiai ${"{form.type}"} produktui, atsižvelgiant į pasirinktus parametrus. Bazė suformuluota taip, kad užtikrintų optimalų aktyvių ingredientų veikimą ir malonią tekstūrą.
 
 AKTYVIEJI INGREDIENTAI
-- Niacinamide (Niacinamide) 5% â porų mažinimas, odos tono lyginimas, raminantis poveikis
-- Hyaluronic Acid (Sodium Hyaluronate) 2% â intensyvus drėkinimas, odos elastingumas
-- Vitamin C (Ascorbyl Glucoside) 3% â antioksidantinis poveikis, šviesinimas
-- Panthenol (Panthenol) 1% â odos barjero stiprinimas, regeneracija
-- Allantoin (Allantoin) 0.5% â raminimas, odos minkštinimas
+- Niacinamide (Niacinamide) 5% — porų mažinimas, odos tono lyginimas, raminantis poveikis
+- Hyaluronic Acid (Sodium Hyaluronate) 2% — intensyvus drėkinimas, odos elastingumas
+- Vitamin C (Ascorbyl Glucoside) 3% — antioksidantinis poveikis, šviesinimas
+- Panthenol (Panthenol) 1% — odos barjero stiprinimas, regeneracija
+- Allantoin (Allantoin) 0.5% — raminimas, odos minkštinimas
 
 BAZINIAI INGREDIENTAI
-- Aqua â pagrindas, tirpiklis (60-70%)
-- Glycerin â humektantas, drėkinimas (5-8%)
-- Cetearyl Alcohol â emolientas, tekstūros stabilizavimas (3-5%)
-- Phenoxyethanol & Ethylhexylglycerin â konservantas (1%)
+- Aqua — pagrindas, tirpiklis (60-70%)
+- Glycerin — humektantas, drėkinimas (5-8%)
+- Cetearyl Alcohol — emolientas, tekstūros stabilizavimas (3-5%)
+- Phenoxyethanol & Ethylhexylglycerin — konservantas (1%)
 
 KONCENTRACIJA
 Vandens fazė: 70% / Aliejinė fazė: 15% / Aktyvieji: 12% / Papildomi: 3%
 
 REGULIACINĖS PASTABOS
-Formuluotė atitinka ES kosmetikos reglamentą (EC) Nr. 1223/2009. Rekomenduojama CPNP notifikacija prieš išleidimą į ES rinką. pH 5.5â6.0.
+Formuluotė atitinka ES kosmetikos reglamentą (EC) Nr. 1223/2009. Rekomenduojama CPNP notifikacija prieš išleidimą į ES rinką. pH 5.5–6.0.
 
 IŠSKIRTINUMAS
-Unikalus derinio variantas â âtriple moisture lock" koncepcija su trimis drėkinimo mechanizmais (humektantas + emolientas + okluzija), suteikiantis ilgalaikį drėkinimo efektą be lipnaus jausmo.`,
+Unikalus derinio variantas — „triple moisture lock" koncepcija su trimis drėkinimo mechanizmais (humektantas + emolientas + okluzija), suteikiantis ilgalaikį drėkinimo efektą be lipnaus jausmo.`,
 
     fragrance: `FORMULAVIMO KRYPTIS
 Šis kvapas sukurtas kaip modernus unisex aromatas su mediniu-gėliniu charakteriu. Formuluotė orientuota į ilgalaikį išlaikumą ir malonų drydown procesą.
 
 KVAPINĖS NATOS
-Viršutinės natos (0â30 min): Bergamotas, Rožinė citrina, Kardamonas
-Širdies natos (30 min â 4 val): Rožė, Cedras, Irisas, Žalysis arbatos lapas
+Viršutinės natos (0–30 min): Bergamotas, Rožinė citrina, Kardamonas
+Širdies natos (30 min – 4 val): Rožė, Cedras, Irisas, Žalysis arbatos lapas
 Bazinės natos (4+ val): Sandalmedis, Muskusas, Ambra, Pačulis
 
 REKOMENDUOJAMOS ŽALIAVOS
-- Bergamot FCF (IFF / Givaudan) â šviežia citrusinė nata be fototoksiškumo
-- Rose absolute Maroko â širdies nota, premium kokybė
-- Sandalwood Mysore (Symrise) â šilta bazinė nota, ilgas išlaikumas
-- Ambroxan (Firmenich) â moderni ambros nota, unisex
+- Bergamot FCF (IFF / Givaudan) — šviežia citrusinė nata be fototoksiškumo
+- Rose absolute Maroko — širdies nota, premium kokybė
+- Sandalwood Mysore (Symrise) — šilta bazinė nota, ilgas išlaikumas
+- Ambroxan (Firmenich) — moderni ambros nota, unisex
 
 KONCENTRACIJA
-EDP: parfumerinė kompozicija 18â22% / Alkoholis 96% / Aqua (stabilizatorius)
+EDP: parfumerinė kompozicija 18–22% / Alkoholis 96% / Aqua (stabilizatorius)
 
 REGULIACINĖS PASTABOS
-IFRA 49 atitiktis būtina. Fototoksiški ingredientai (bergamotas) turi būti FCF versijos. EU Allergens sąrašas â privaloma deklaracija ant etiketės.
+IFRA 49 atitiktis būtina. Fototoksiški ingredientai (bergamotas) turi būti FCF versijos. EU Allergens sąrašas — privaloma deklaracija ant etiketės.
 
 IŠSKIRTINUMAS
-âClean luxury" pozicionavimas â sintetiniai muskusai pakeičiami natūraliais alternatyvais, kas leidžia komunikuoti tvarumą neprarandant prabangios patirties.`,
+„Clean luxury" pozicionavimas — sintetiniai muskusai pakeičiami natūraliais alternatyvais, kas leidžia komunikuoti tvarumą neprarandant prabangios patirties.`,
 
     home: `FORMULAVIMO KRYPTIS
 Namų kvapas sukurtas erdvei suteikti šiltą, jaukią atmosferą. Formuluotė optimizuota stipriam kvapų skleidimui ir ilgalaikiam poveikiui.
@@ -1023,25 +1023,25 @@ Viršutinės natos: Bergamotas, Eukaliptas, Citrusiniai vaisiai
 Bazinės natos: Cedrų medis, Tonkos pupelė, Muskusas, Vanilė
 
 REKOMENDUOJAMOS ŽALIAVOS
-- Lavender 40/42 (essential oil) â raminanti, universali nota
-- Tonka bean absolute â šilta, saldi bazė
-- Cedar Virginian (essential oil) â mediška bazė, ilgas išlaikumas
-- Fragrance load 10-12% â optimali koncentracija difuzoriams
+- Lavender 40/42 (essential oil) — raminanti, universali nota
+- Tonka bean absolute — šilta, saldi bazė
+- Cedar Virginian (essential oil) — mediška bazė, ilgas išlaikumas
+- Fragrance load 10-12% — optimali koncentracija difuzoriams
 
 KONCENTRACIJA
-Parfumerinė kompozicija: 10â15% / DPG (dipropylene glycol) tirpiklis: 85â90%
+Parfumerinė kompozicija: 10–15% / DPG (dipropylene glycol) tirpiklis: 85–90%
 
 REGULIACINĖS PASTABOS
-CLP reglamentas (EC) Nr. 1272/2008 â privaloma GHS etiketė. IFRA atitiktis namų kvapams. Ugnies saugos reikalavimai žvakėms (EN 15493/15494).
+CLP reglamentas (EC) Nr. 1272/2008 — privaloma GHS etiketė. IFRA atitiktis namų kvapams. Ugnies saugos reikalavimai žvakėms (EN 15493/15494).
 
 IŠSKIRTINUMAS
-âSkandinaviško minimalizmo" koncepcija â švarūs, nepertekliniai kvapai su mediniu pagrindu, atspindintys tvarumo ir natūralumo vertybes.`
+„Skandinaviško minimalizmo" koncepcija — švarūs, nepertekliniai kvapai su mediniu pagrindu, atspindintys tvarumo ir natūralumo vertybes.`
   };
 
   const submit = async () => {
     setLoading(true); setError(null); setResult(null);
 
-    // DEMO MODE â mock atsakymas be API
+    // DEMO MODE — mock atsakymas be API
     await new Promise(r => setTimeout(r, 1800)); // simuliuojam loading
     const isFrag = form.cat === "fragrance";
     const isHome = form.cat === "home";
@@ -1226,7 +1226,7 @@ IŠSKIRTINUMAS
         {step === 7 && (
           <div className="fade">
             <h2 style={{ fontSize:"1.5rem", fontWeight:700, marginBottom:"0.5rem" }}>Papildoma informacija</h2>
-            <p style={{ fontSize:"0.82rem", opacity:0.5, marginBottom:"1.8rem" }}>Nebūtina â tekstūra, kvapas, pozicionavimas, inspiracija</p>
+            <p style={{ fontSize:"0.82rem", opacity:0.5, marginBottom:"1.8rem" }}>Nebūtina — tekstūra, kvapas, pozicionavimas, inspiracija</p>
             <textarea rows={4} placeholder="pvz. Natūrali linija, veganiška, prabangus jausmas, specifinis kvapas..." value={form.brief}
               onChange={e=>setForm(f=>({...f,brief:e.target.value}))} style={{marginBottom:"1.5rem"}} />
 
