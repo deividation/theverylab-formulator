@@ -547,13 +547,16 @@ Be specific, professional, and realistic. Concentrations must be scientifically 
         },
         body: JSON.stringify({
           model: "claude-sonnet-4-20250514",
-          max_tokens: 1000,
+          max_tokens: 2000,
           messages: [{ role: "user", content: prompt }],
         }),
       });
 
       const data = await response.json();
-      const text = data.content?.map(b => b.text || "").join("") || "Error: no response";
+      if (!response.ok) {
+        throw new Error(`API error ${response.status}: ${JSON.stringify(data).substring(0, 200)}`);
+      }
+      const text = data.content?.map(b => b.text || "").join("").trim() || "Error: empty response from AI. Raw: " + JSON.stringify(data).substring(0, 300);
 
       const header = `FORMULATION DIRECTION\n${catLabel()} product line — ${form.types.length} product${form.types.length > 1 ? "s" : ""}\nSkin: ${form.skin.join(", ")} | Effects: ${form.effects.join(", ")}${form.avoid.length > 0 ? " | Avoid: " + form.avoid.join(", ") : ""}`;
       setResult(header + "\n\n" + text);
