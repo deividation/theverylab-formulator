@@ -136,10 +136,10 @@ function SampleRequest({ pricing, form, catLabel, onClose }) {
         </div>
 
         {/* Formula summary */}
-        {form.type && (
+        {form.types?.length > 0 && (
           <div style={{ background: C.cream, padding: "0.9rem 1rem", marginBottom: "1.5rem", fontSize: "0.82rem", lineHeight: 1.8 }}>
             <div style={{ fontSize: "0.6rem", letterSpacing: "0.12em", textTransform: "uppercase", color: C.red, fontWeight: 700, marginBottom: "0.3rem" }}>Your formula</div>
-            <div><strong>{catLabel}</strong> · {form.type}</div>
+            <div><strong>{catLabel}</strong> · {form.types.join(", ")}</div>
             {form.effects.length > 0 && <div style={{ opacity: 0.65 }}>{form.effects.join(", ")}</div>}
             {pricing.qty > 0 && <div style={{ color: C.red, fontWeight: 700, marginTop: "0.3rem" }}>Planned batch: {pricing.qty.toLocaleString()} units · ~€{pricing.total?.toLocaleString()}</div>}
           </div>
@@ -459,7 +459,7 @@ function EarningsCalc({ costPerUnit, qty }) {
 // ─── MAIN APP ─────────────────────────────────────────────────────────────────
 export default function App() {
   const [step, setStep] = useState(0);
-  const [form, setForm] = useState({ cat: "", type: "", skin: [], effects: [], avoid: [], brief: "" });
+  const [form, setForm] = useState({ cat: "", types: [], skin: [], effects: [], avoid: [], brief: "" });
   const [pricing, setPricing] = useState({ qty: 0, pricePerUnit: 0, total: 0 });
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -472,12 +472,12 @@ export default function App() {
   }));
 
   const selectCat = (id) => {
-    setForm(f => ({ ...f, cat: id, type: "", skin: [], effects: [] }));
+    setForm(f => ({ ...f, cat: id, types: [], skin: [], effects: [] }));
     setTimeout(() => setStep(1), 180);
   };
 
   const canNext = () => {
-    if (step === 1) return form.type !== "";
+    if (step === 1) return form.types.length > 0;
     if (step === 2) return form.skin.length > 0;
     if (step === 3) return form.effects.length > 0;
     return true;
@@ -485,7 +485,7 @@ export default function App() {
 
   const catLabel = () => (CATS.find(x => x.id === form.cat) || {}).label || "";
   const pct = step === 0 ? 0 : step >= 8 ? 100 : ((step - 1) / 7) * 100;
-  const ctx = skinCtx(form.cat, form.type);
+  const ctx = skinCtx(form.cat, form.types[0] || "");
 
   const STEP_LABELS = ["", "Product type", ctx.label, "Effects", "Ingredients", "Quantity & price", "Packaging (EVC)", "Additional info"];
 
@@ -494,7 +494,7 @@ export default function App() {
     setResult(null);
     await new Promise(r => setTimeout(r, 1800));
     const mock = `FORMULATION DIRECTION
-Formula created for ${form.type} — ${catLabel()} category.
+Formula created for ${form.types.join(", ")} — ${catLabel()} category.
 
 ACTIVE INGREDIENTS
 - Niacinamide 5% — pore minimizing, brightening
@@ -516,7 +516,7 @@ Complies with EU Regulation (EC) No. 1223/2009. pH 5.5–6.0. 24-month shelf lif
 
   const reset = () => {
     setStep(0);
-    setForm({ cat: "", type: "", skin: [], effects: [], avoid: [], brief: "" });
+    setForm({ cat: "", types: [], skin: [], effects: [], avoid: [], brief: "" });
     setPricing({ qty: 0, pricePerUnit: 0, total: 0 });
     setResult(null);
     setShowSample(false);
@@ -595,7 +595,7 @@ Complies with EU Regulation (EC) No. 1223/2009. pH 5.5–6.0. 24-month shelf lif
               <div style={{ fontSize: "0.7rem", opacity: 0.35 }}>{step} / 7</div>
             </div>
             <div className="bar"><div className="fill" style={{ width: pct + "%" }} /></div>
-            <div style={{ marginTop: "0.5rem", fontSize: "0.72rem", opacity: 0.4 }}>{catLabel()}{form.type ? " / " + form.type : ""}</div>
+            <div style={{ marginTop: "0.5rem", fontSize: "0.72rem", opacity: 0.4 }}>{catLabel()}{form.types.length > 0 ? " / " + form.types.join(", ") : ""}</div>
           </div>
         )}
 
@@ -623,12 +623,12 @@ Complies with EU Regulation (EC) No. 1223/2009. pH 5.5–6.0. 24-month shelf lif
             <h2 style={{ fontSize: "1.5rem", fontWeight: 700, marginBottom: "1.8rem" }}>What type of product are you creating?</h2>
             <div style={{ display: "flex", flexWrap: "wrap", gap: "0.55rem", marginBottom: "2rem" }}>
               {(PRODUCTS[form.cat] || []).map(tp => (
-                <button key={tp} className={"chip" + (form.type === tp ? " sel" : "")} onClick={() => setForm(f => ({ ...f, type: tp, skin: [], effects: [] }))}>{tp}</button>
+                <button key={tp} className={"chip" + (form.types.includes(tp) ? " sel" : "")} onClick={() => setForm(f => ({ ...f, types: f.types.includes(tp) ? f.types.filter(x => x !== tp) : [...f.types, tp], skin: [], effects: [] }))}>{tp}</button>
               ))}
             </div>
-            {form.type && (
+            {form.types.length > 0 && (
               <div style={{ marginBottom: "1.5rem", padding: "0.75rem 1rem", background: C.pink, fontSize: "0.78rem", borderLeft: `3px solid ${C.red}` }}>
-                Next step: <strong>{ctx.label}</strong>
+                <strong>{form.types.length} product{form.types.length > 1 ? "s" : ""} selected</strong>{form.types.length > 1 ? ` — ${form.types.join(", ")}` : ` — ${form.types[0]}`}
               </div>
             )}
             <div style={{ display: "flex", gap: "1rem" }}>
@@ -756,7 +756,7 @@ Complies with EU Regulation (EC) No. 1223/2009. pH 5.5–6.0. 24-month shelf lif
             <div style={{ background: C.white, border: "1.5px solid rgba(0,0,0,0.08)", padding: "1.2rem 1.4rem", marginBottom: "1.5rem", fontSize: "0.85rem", lineHeight: 2 }}>
               <div style={{ fontSize: "0.62rem", letterSpacing: "0.12em", textTransform: "uppercase", color: C.red, fontWeight: 600, marginBottom: "0.5rem" }}>Request summary</div>
               <div><span style={{ opacity: 0.45, fontSize: "0.72rem", marginRight: "0.5rem" }}>Category</span>{catLabel()}</div>
-              <div><span style={{ opacity: 0.45, fontSize: "0.72rem", marginRight: "0.5rem" }}>Product</span>{form.type}</div>
+              <div><span style={{ opacity: 0.45, fontSize: "0.72rem", marginRight: "0.5rem" }}>Products</span>{form.types.join(", ")}</div>
               {form.skin.length > 0 && <div><span style={{ opacity: 0.45, fontSize: "0.72rem", marginRight: "0.5rem" }}>{ctx.label}</span>{form.skin.join(", ")}</div>}
               <div><span style={{ opacity: 0.45, fontSize: "0.72rem", marginRight: "0.5rem" }}>Effects</span>{form.effects.join(", ")}</div>
               {pricing.qty > 0 && (
@@ -782,7 +782,7 @@ Complies with EU Regulation (EC) No. 1223/2009. pH 5.5–6.0. 24-month shelf lif
               <>
                 <div className="result-header">
                   <div style={{ fontSize: "0.65rem", letterSpacing: "0.15em", textTransform: "uppercase", opacity: 0.6, marginBottom: "0.5rem" }}>the very lab / formulation direction</div>
-                  <div style={{ fontSize: "1.6rem", fontWeight: 700, lineHeight: 1.2, marginBottom: "0.4rem" }}>{form.type}</div>
+                  <div style={{ fontSize: "1.6rem", fontWeight: 700, lineHeight: 1.2, marginBottom: "0.4rem" }}>{form.types.join(" · ")}</div>
                   <div style={{ fontSize: "0.8rem", opacity: 0.65 }}>{catLabel()} · {new Date().toLocaleDateString("en-GB")}</div>
                 </div>
 
