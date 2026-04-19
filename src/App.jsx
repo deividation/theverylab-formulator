@@ -539,10 +539,12 @@ REGULATORY NOTES
 
 Be specific, professional, and realistic. Concentrations must be scientifically accurate. Adapt each formula to the specified skin type and effects.`;
 
-      const response = await fetch("/api/formulate", {
+      const response = await fetch("https://api.anthropic.com/v1/messages", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "x-api-key": process.env.REACT_APP_ANTHROPIC_KEY || "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",
+          "anthropic-version": "2023-06-01",
           "anthropic-dangerous-direct-browser-access": "true",
         },
         body: JSON.stringify({
