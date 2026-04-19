@@ -164,6 +164,31 @@ function SampleRequest({ pricing, form, catLabel, onClose }) {
         </div>
       </div>
     </div>
+
+        {showLeadForm && (
+          <div style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, background: "rgba(0,0,0,0.5)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 100, padding: "1rem" }}>
+            <div style={{ background: C.white, maxWidth: "420px", width: "100%", padding: "2rem" }} className="fade">
+              <div style={{ fontSize: "0.62rem", letterSpacing: "0.15em", textTransform: "uppercase", color: C.red, fontWeight: 700, marginBottom: "0.4rem" }}>the very lab</div>
+              <div style={{ fontSize: "1.4rem", fontWeight: 700, marginBottom: "0.4rem" }}>Almost there</div>
+              <p style={{ fontSize: "0.88rem", opacity: 0.6, lineHeight: 1.6, marginBottom: "1.5rem" }}>Enter your details to receive your formulation direction.</p>
+              <div style={{ display: "flex", flexDirection: "column", gap: "1rem", marginBottom: "1.5rem" }}>
+                {[
+                  { label: "Full name *", key: "name", type: "text", ph: "Jane Smith" },
+                  { label: "Phone number *", key: "phone", type: "tel", ph: "+370 600 00000" },
+                ].map(({ label, key, type, ph }) => (
+                  <div key={key}>
+                    <div style={{ fontSize: "0.7rem", opacity: 0.5, marginBottom: "0.35rem", letterSpacing: "0.08em", textTransform: "uppercase" }}>{label}</div>
+                    <input type={type} value={leadData[key]} onChange={e => setLeadData(p => ({ ...p, [key]: e.target.value }))} placeholder={ph} />
+                  </div>
+                ))}
+              </div>
+              <div style={{ display: "flex", gap: "1rem" }}>
+                <button className="btn ghost" onClick={() => setShowLeadForm(false)}>Cancel</button>
+                <button className="btn" disabled={!leadData.name || !leadData.phone} onClick={() => { setLeadCaptured(true); setShowLeadForm(false); submit(); }}>Get direction →</button>
+              </div>
+            </div>
+          </div>
+        )}
   );
 }
 
@@ -482,6 +507,9 @@ export default function App() {
   const [loading, setLoading] = useState(false);
   const [showSample, setShowSample] = useState(false);
   const [showWaitlist, setShowWaitlist] = useState(false);
+  const [leadCaptured, setLeadCaptured] = useState(false);
+  const [showLeadForm, setShowLeadForm] = useState(false);
+  const [leadData, setLeadData] = useState({ name: "", phone: "" });
   const topRef = useRef(null);
 
   const toggle = (field, val) => setForm(f => ({
@@ -505,6 +533,11 @@ export default function App() {
   const ctx = skinCtx(form.cat, form.types[0] || "");
 
   const STEP_LABELS = ["", "Product type", ctx.label, "Effects", "Ingredients", "Quantity & price", "Packaging (EVC)", "Additional info"];
+
+  const submitWithLead = () => {
+    if (!leadCaptured) { setShowLeadForm(true); return; }
+    submit();
+  };
 
   const submit = async () => {
     setLoading(true);
@@ -841,7 +874,7 @@ Be specific, professional, and realistic. Concentrations must be scientifically 
             {loading && [100, 100, 60].map((w, i) => <div key={i} className="sk" style={{ height: "10px", width: w + "%" }} />)}
             <div style={{ display: "flex", gap: "1rem", marginTop: "0.5rem" }}>
               <button className="btn ghost" onClick={() => setStep(6)} disabled={loading}>← Back</button>
-              <button className="btn" onClick={submit} disabled={loading}>{loading ? `Formulating ${form.types.length > 1 ? form.types.length + " products" : form.types[0] || ""}...` : "Get direction →"}</button>
+              <button className="btn" onClick={submitWithLead} disabled={loading}>{loading ? `Formulating ${form.types.length > 1 ? form.types.length + " products" : form.types[0] || ""}...` : "Get direction →"}</button>
             </div>
           </div>
         )}
