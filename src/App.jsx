@@ -168,59 +168,221 @@ function SampleRequest({ pricing, form, catLabel, onClose }) {
 }
 
 // ─── WAITLIST ─────────────────────────────────────────────────────────────────
-function Waitlist({ onClose }) {
-  const [email, setEmail] = useState("");
-  const [sent, setSent] = useState(false);
-  const [position] = useState(() => Math.floor(Math.random() * 8) + 4);
-  const weeks = Math.ceil(position / 2);
+// ─── PROJECT TRACKER ─────────────────────────────────────────────────────────
+const DEMO_PROJECTS = {
+  "demo@theverylab.com": {
+    id: "TVL-2024-047",
+    product: "Beard Balm — Nordic Series",
+    brand: "Northwood Grooming",
+    startDate: "2024-11-12",
+    stages: [
+      { id: "consultation", label: "Consultation", icon: "◎", status: "done", date: "Nov 12", note: "Formula brief confirmed. Nordic pine + cedar scent direction." },
+      { id: "formula",      label: "Formulation",  icon: "⬡", status: "done", date: "Nov 19", note: "R&D completed. EU compliance verified. pH 6.2." },
+      { id: "sampling",     label: "Sampling",     icon: "◈", status: "done", date: "Nov 28", note: "50ml sample shipped. Awaiting client approval." },
+      { id: "approval",     label: "Approval",     icon: "◉", status: "active", date: "Dec 03", note: "Sample under review. Please confirm by Dec 10." },
+      { id: "production",   label: "Production",   icon: "⬟", status: "pending", date: "~Dec 16", note: "3 000 units scheduled. Est. 8 working days." },
+      { id: "qc",           label: "QC & Testing", icon: "◇", status: "pending", date: "~Dec 26", note: "Full batch quality control + documentation." },
+      { id: "delivery",     label: "Delivery",     icon: "◻", status: "pending", date: "~Jan 03", note: "Shipping to Vilnius warehouse. DPD Express." },
+    ],
+  },
+  "test@brand.com": {
+    id: "TVL-2024-052",
+    product: "Face Serum — Vitamin C Complex",
+    brand: "Lumera Beauty",
+    startDate: "2024-12-01",
+    stages: [
+      { id: "consultation", label: "Consultation", icon: "◎", status: "done",   date: "Dec 01", note: "Brief confirmed. Brightening + anti-age direction." },
+      { id: "formula",      label: "Formulation",  icon: "⬡", status: "active", date: "Dec 10", note: "R&D in progress. Niacinamide 5% + Vit C 3% formula." },
+      { id: "sampling",     label: "Sampling",     icon: "◈", status: "pending", date: "~Dec 20", note: "50ml sample will be shipped after formula lock." },
+      { id: "approval",     label: "Approval",     icon: "◉", status: "pending", date: "~Dec 27", note: "Client review period: 5 business days." },
+      { id: "production",   label: "Production",   icon: "⬟", status: "pending", date: "~Jan 10", note: "1 000 units batch." },
+      { id: "qc",           label: "QC & Testing", icon: "◇", status: "pending", date: "~Jan 17", note: "Full quality control." },
+      { id: "delivery",     label: "Delivery",     icon: "◻", status: "pending", date: "~Jan 22", note: "Shipping to client warehouse." },
+    ],
+  },
+};
 
-  if (sent) return (
+function ProjectTracker({ onClose }) {
+  const [email, setEmail] = useState("");
+  const [project, setProject] = useState(null);
+  const [notifyEmail, setNotifyEmail] = useState("");
+  const [notifySent, setNotifySent] = useState(false);
+  const [notifyStages, setNotifyStages] = useState({ all: true });
+  const [view, setView] = useState("lookup"); // lookup | tracker | notify
+
+  const lookup = () => {
+    const found = DEMO_PROJECTS[email.toLowerCase().trim()];
+    if (found) { setProject(found); setView("tracker"); }
+    else setProject(null);
+  };
+
+  const activeIdx = project ? project.stages.findIndex(s => s.status === "active") : -1;
+  const doneCount = project ? project.stages.filter(s => s.status === "done").length : 0;
+  const totalStages = project ? project.stages.length : 0;
+  const pct = project ? Math.round((doneCount / totalStages) * 100) : 0;
+
+  const statusStyle = (status) => {
+    if (status === "done")    return { color: "#16a34a", bg: "rgba(22,163,74,0.08)", border: "rgba(22,163,74,0.25)" };
+    if (status === "active")  return { color: C.red,    bg: C.pink,                 border: C.red };
+    return { color: "rgba(0,0,0,0.3)", bg: "transparent", border: "rgba(0,0,0,0.1)" };
+  };
+
+  if (view === "notify") return (
     <div className="panel fade">
       <div className="panel-header" style={{ background: C.black, color: C.white }}>
-        <div style={{ fontSize: "0.62rem", letterSpacing: "0.15em", textTransform: "uppercase", opacity: 0.5, marginBottom: "0.4rem" }}>the very lab</div>
-        <div style={{ fontSize: "1.4rem", fontWeight: 700 }}>⏳ Waitlist</div>
+        <div style={{ fontSize: "0.62rem", letterSpacing: "0.15em", textTransform: "uppercase", opacity: 0.5, marginBottom: "0.4rem" }}>the very lab / {project?.id}</div>
+        <div style={{ fontSize: "1.3rem", fontWeight: 700 }}>🔔 Status notifications</div>
       </div>
-      <div className="panel-body" style={{ textAlign: "center", padding: "3rem 2rem" }}>
-        <div style={{ fontSize: "3rem", marginBottom: "1rem" }}>✓</div>
-        <div style={{ fontSize: "1.1rem", fontWeight: 700, marginBottom: "0.5rem" }}>You're on the list!</div>
-        <div style={{ fontSize: "0.88rem", opacity: 0.6, marginBottom: "0.3rem" }}>We'll notify you at: <strong>{email}</strong></div>
-        <div style={{ fontSize: "0.82rem", opacity: 0.45, marginBottom: "2rem" }}>Position #{position} · ~{weeks} weeks estimated wait</div>
-        <button className="btn ghost" onClick={onClose}>← Back to results</button>
+      <div className="panel-body">
+        {notifySent ? (
+          <div style={{ textAlign: "center", padding: "2rem 0" }}>
+            <div style={{ fontSize: "2.5rem", marginBottom: "1rem" }}>✓</div>
+            <div style={{ fontWeight: 700, fontSize: "1.1rem", marginBottom: "0.5rem" }}>Notifications enabled!</div>
+            <div style={{ fontSize: "0.85rem", opacity: 0.6, marginBottom: "2rem" }}>
+              We'll email <strong>{notifyEmail}</strong> when your project moves to the next stage.
+            </div>
+            <button className="btn ghost" onClick={() => setView("tracker")}>← Back to project</button>
+          </div>
+        ) : (
+          <>
+            <p style={{ fontSize: "0.88rem", lineHeight: 1.6, marginBottom: "1.5rem", opacity: 0.7 }}>
+              Get an email notification every time your project advances to the next production stage.
+            </p>
+            <div style={{ marginBottom: "1.5rem" }}>
+              <div style={{ fontSize: "0.7rem", opacity: 0.5, marginBottom: "0.35rem", letterSpacing: "0.08em", textTransform: "uppercase" }}>Notify email</div>
+              <input type="email" value={notifyEmail} onChange={e => setNotifyEmail(e.target.value)} placeholder="hello@yourbrand.com" />
+            </div>
+            <div style={{ marginBottom: "1.5rem" }}>
+              <div style={{ fontSize: "0.7rem", opacity: 0.5, marginBottom: "0.8rem", letterSpacing: "0.08em", textTransform: "uppercase" }}>Notify me when stage changes to:</div>
+              <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+                {project?.stages.filter(s => s.status !== "done").map(s => (
+                  <label key={s.id} style={{ display: "flex", alignItems: "center", gap: "0.6rem", fontSize: "0.88rem", cursor: "pointer" }}>
+                    <input type="checkbox" defaultChecked style={{ accentColor: C.red, width: "14px", height: "14px" }} />
+                    <span style={{ opacity: s.status === "active" ? 1 : 0.6 }}>{s.icon} {s.label}</span>
+                    {s.status === "active" && <span style={{ fontSize: "0.65rem", background: C.red, color: C.white, padding: "0.1rem 0.4rem", letterSpacing: "0.08em" }}>ACTIVE</span>}
+                  </label>
+                ))}
+              </div>
+            </div>
+            <div style={{ display: "flex", gap: "1rem" }}>
+              <button className="btn ghost" onClick={() => setView("tracker")}>Cancel</button>
+              <button className="btn" disabled={!notifyEmail} onClick={() => setNotifySent(true)}>Enable notifications</button>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
 
+  if (view === "tracker" && project) return (
+    <div className="panel fade">
+      <div className="panel-header" style={{ background: C.black, color: C.white }}>
+        <div style={{ fontSize: "0.62rem", letterSpacing: "0.15em", textTransform: "uppercase", opacity: 0.5, marginBottom: "0.4rem" }}>the very lab / production tracker</div>
+        <div style={{ fontSize: "1.3rem", fontWeight: 700, marginBottom: "0.3rem" }}>{project.product}</div>
+        <div style={{ fontSize: "0.78rem", opacity: 0.55 }}>{project.brand} · {project.id}</div>
+      </div>
+
+      {/* Progress bar */}
+      <div style={{ height: "4px", background: "rgba(255,255,255,0.12)", position: "relative" }}>
+        <div style={{ height: "4px", background: C.pinkMid, width: pct + "%", transition: "width 0.6s" }} />
+      </div>
+
+      <div className="panel-body">
+        {/* Stats row */}
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "0.6rem", marginBottom: "1.8rem" }}>
+          {[
+            { label: "Progress",       value: pct + "%"       },
+            { label: "Stages done",    value: `${doneCount} / ${totalStages}` },
+            { label: "Current stage",  value: activeIdx >= 0 ? project.stages[activeIdx].label : "Complete" },
+          ].map(({ label, value }) => (
+            <div key={label} style={{ border: "1.5px solid rgba(0,0,0,0.08)", padding: "0.8rem", textAlign: "center" }}>
+              <div style={{ fontSize: "0.58rem", opacity: 0.4, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: "0.3rem" }}>{label}</div>
+              <div style={{ fontSize: "0.95rem", fontWeight: 700 }}>{value}</div>
+            </div>
+          ))}
+        </div>
+
+        {/* Stage roadmap */}
+        <div style={{ position: "relative", marginBottom: "1.8rem" }}>
+          {project.stages.map((stage, i) => {
+            const s = statusStyle(stage.status);
+            const isLast = i === project.stages.length - 1;
+            return (
+              <div key={stage.id} style={{ display: "flex", gap: "0", marginBottom: isLast ? 0 : "0" }}>
+                {/* Line + icon column */}
+                <div style={{ display: "flex", flexDirection: "column", alignItems: "center", width: "36px", flexShrink: 0 }}>
+                  <div style={{
+                    width: "28px", height: "28px", border: `2px solid ${s.border}`,
+                    background: s.bg, display: "flex", alignItems: "center", justifyContent: "center",
+                    fontSize: "0.7rem", color: s.color, fontWeight: 700, flexShrink: 0,
+                    boxShadow: stage.status === "active" ? `0 0 0 3px ${C.pink}` : "none",
+                  }}>
+                    {stage.status === "done" ? "✓" : stage.icon}
+                  </div>
+                  {!isLast && <div style={{ width: "2px", flex: 1, minHeight: "16px", background: stage.status === "done" ? "rgba(22,163,74,0.3)" : "rgba(0,0,0,0.08)" }} />}
+                </div>
+
+                {/* Content */}
+                <div style={{ paddingLeft: "0.8rem", paddingBottom: isLast ? 0 : "1.2rem", flex: 1 }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.2rem" }}>
+                    <div style={{ fontSize: "0.88rem", fontWeight: stage.status === "active" ? 700 : 500, color: stage.status === "pending" ? "rgba(0,0,0,0.35)" : C.black }}>
+                      {stage.label}
+                    </div>
+                    {stage.status === "active" && (
+                      <div style={{ fontSize: "0.6rem", background: C.red, color: C.white, padding: "0.1rem 0.4rem", letterSpacing: "0.1em", fontWeight: 700 }}>ACTIVE</div>
+                    )}
+                    <div style={{ marginLeft: "auto", fontSize: "0.72rem", opacity: 0.4, whiteSpace: "nowrap" }}>{stage.date}</div>
+                  </div>
+                  <div style={{ fontSize: "0.78rem", opacity: stage.status === "pending" ? 0.35 : 0.6, lineHeight: 1.5 }}>{stage.note}</div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
+          <button className="btn ghost" onClick={() => setView("lookup")}>← Look up another</button>
+          <button className="btn dark" onClick={() => setView("notify")}>🔔 Get notified</button>
+          <button className="btn ghost" onClick={onClose}>Close</button>
+        </div>
+      </div>
+    </div>
+  );
+
+  // Lookup view
   return (
     <div className="panel fade">
       <div className="panel-header" style={{ background: C.black, color: C.white }}>
         <div style={{ fontSize: "0.62rem", letterSpacing: "0.15em", textTransform: "uppercase", opacity: 0.5, marginBottom: "0.4rem" }}>the very lab</div>
-        <div style={{ fontSize: "1.4rem", fontWeight: 700 }}>⏳ Waitlist</div>
+        <div style={{ fontSize: "1.4rem", fontWeight: 700 }}>⬟ Production tracker</div>
       </div>
       <div className="panel-body">
         <p style={{ fontSize: "0.88rem", lineHeight: 1.65, marginBottom: "1.5rem", opacity: 0.7 }}>
-          We're currently at full production capacity. Join the waitlist and we'll notify you as soon as we can take on your project.
+          Enter the email you used when placing your order to track your production status in real time.
         </p>
 
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.8rem", marginBottom: "1.8rem" }}>
-          <div style={{ border: `1.5px solid rgba(0,0,0,0.08)`, padding: "1.2rem", textAlign: "center" }}>
-            <div style={{ fontSize: "0.6rem", opacity: 0.4, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: "0.5rem" }}>Your position</div>
-            <div style={{ fontSize: "2.2rem", fontWeight: 700, color: C.red, lineHeight: 1 }}>#{position}</div>
-          </div>
-          <div style={{ border: `1.5px solid rgba(0,0,0,0.08)`, padding: "1.2rem", textAlign: "center" }}>
-            <div style={{ fontSize: "0.6rem", opacity: 0.4, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: "0.5rem" }}>Estimated wait</div>
-            <div style={{ fontSize: "2.2rem", fontWeight: 700, lineHeight: 1 }}>{weeks}<span style={{ fontSize: "1rem", fontWeight: 400, opacity: 0.45, marginLeft: "0.3rem" }}>wks</span></div>
-          </div>
-        </div>
-
         <div style={{ marginBottom: "1rem" }}>
-          <div style={{ fontSize: "0.7rem", opacity: 0.5, marginBottom: "0.35rem", letterSpacing: "0.08em", textTransform: "uppercase" }}>Email for notification</div>
+          <div style={{ fontSize: "0.7rem", opacity: 0.5, marginBottom: "0.35rem", letterSpacing: "0.08em", textTransform: "uppercase" }}>Your order email</div>
           <div style={{ display: "flex", gap: "0.8rem" }}>
-            <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="hello@yourbrand.com" />
-            <button className="btn" onClick={() => setSent(true)} disabled={!email} style={{ whiteSpace: "nowrap", padding: "0.7rem 1.5rem" }}>Join queue</button>
+            <input type="email" value={email} onChange={e => setEmail(e.target.value)}
+              onKeyDown={e => e.key === "Enter" && lookup()}
+              placeholder="hello@yourbrand.com" />
+            <button className="btn" onClick={lookup} disabled={!email} style={{ whiteSpace: "nowrap", padding: "0.7rem 1.5rem" }}>
+              Track →
+            </button>
           </div>
+          {email && project === null && (
+            <div style={{ marginTop: "0.6rem", fontSize: "0.78rem", color: C.red, opacity: 0.8 }}>
+              No active project found for this email.
+            </div>
+          )}
         </div>
 
-        <button className="btn ghost" onClick={onClose} style={{ width: "100%", marginTop: "0.5rem" }}>Cancel</button>
+        <div style={{ background: C.cream, padding: "0.8rem 1rem", fontSize: "0.78rem", opacity: 0.6, marginBottom: "1.5rem" }}>
+          💡 Try <strong>demo@theverylab.com</strong> or <strong>test@brand.com</strong> to see a live example.
+        </div>
+
+        <button className="btn ghost" onClick={onClose} style={{ width: "100%" }}>Cancel</button>
       </div>
     </div>
   );
@@ -642,7 +804,7 @@ Complies with EU Regulation (EC) No. 1223/2009. pH 5.5–6.0. 24-month shelf lif
                   <button className="btn" onClick={reset}>New formula →</button>
                   <button className="btn ghost" onClick={() => navigator.clipboard?.writeText(result)}>Copy</button>
                   <button className="btn dark" onClick={() => { setShowSample(true); setShowWaitlist(false); }}>🧪 Order a sample →</button>
-                  <button className="btn ghost" onClick={() => { setShowWaitlist(true); setShowSample(false); }}>⏳ Join the queue →</button>
+                  <button className="btn ghost" onClick={() => { setShowWaitlist(true); setShowSample(false); }}>⬟ Track my project →</button>
                 </div>
 
                 <EarningsCalc costPerUnit={costPerUnit} qty={pricing.qty} />
