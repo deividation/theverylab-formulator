@@ -1,251 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
 
-
-// ============================================================
-// TRANSLATIONS
-// ============================================================
-const T = {
-  lt: {
-    // NAV
-    reset: "{t.reset}",
-    demo: "DEMO",
-    // HERO
-    heroSub: "{t.heroSub}",
-    heroTitle1: "Jūsų receptūra.",
-    heroTitle2: "Mūsų laboratorija.",
-    heroDesc: "{t.heroDesc}",
-    heroStat1n: {t.heroStat1n}, heroStat1t: {t.heroStat1t},
-    heroStat2n: {t.heroStat2n},   heroStat2t: {t.heroStat2t},
-    heroStat3n: {t.heroStat3n}, heroStat3t: {t.heroStat3t},
-    strip1: {t.strip1}, strip2: {t.strip2},
-    strip3: {t.strip3}, strip4: {t.strip4},
-    // STEP LABELS
-    sl1: "Produkto tipas", sl3: {t.sEff}, sl4: "Ingredientai",
-    sl5: {t.step5title}, sl6: "Pakuotė (EVC)", sl7: "Papildoma info",
-    // STEP 0
-    step0num: {t.step0num},
-    step0title: {t.step0title},
-    step0desc: {t.step0desc},
-    // STEP 1
-    step1title: {t.step1title},
-    step1hint: {t.step1hint},
-    // STEP 2
-    step2hint: {t.step2hint},
-    // STEP 3
-    step3titleSkin: {t.step3titleSkin},
-    step3title: {t.step3title},
-    step3hint: {t.step3hint},
-    // STEP 4
-    step4title: {t.step4title},
-    step4hint: {t.step4hint},
-    // STEP 5
-    step5title: "Kiekis ir kaina",
-    minOrder: "{t.minOrder}",
-    pricePer: {t.pricePer}, totalSum: {t.totalSum}, qty: {t.sQty},
-    nudge1: {t.nudge1}, nudge2: {t.nudge2}, nudge3: {t.nudge3},
-    nudge4: {t.nudge4}, nudge5: {t.nudge5},
-    priceNote: "{t.priceNote}",
-    // STEP 6
-    step6title: {t.step6title},
-    pkgDesc: {t.pkgDesc},
-    pkgNone: {t.pkgNone},
-    pkgSelected: "Pasirinktos pakuotės", pkgTotal: "Pakuotė viso",
-    sizeLabel: {t.sizeLabel}, unitPrice: {t.unitPrice}, pkgCompat: "{t.pkgCompatNote}",
-    // STEP 7
-    step7title: {t.step7title},
-    step7hint: {t.step7hint},
-    step7ph: {t.step7ph},
-    summaryTitle: {t.summaryTitle},
-    sCat: {t.sCat}, sProd: {t.sProd}, sEff: "Efektai", sAvoid: {t.sAvoid}, sQty: {t.resQty}, sPkg: {t.sPkg},
-    btnGet: "Gauti kryptį →", btnLoading: {t.btnLoading},
-    // RESULT
-    resSubtitle: "{t.resSubtitle}",
-    resQty: {t.qty}, resPriceU: {t.resPriceU}, resTotal: "Bendra suma",
-    pkgResultTitle: {t.pkgResultTitle},
-    formulaLine: {t.formulaLine}, pkgLine: {t.pkgLine}, totalLine: {t.totalLine},
-    pkgCompatNote: "Suderinamumas su formuluote bus patvirtintas konsultacijos metu.",
-    disclaimer: "{t.disclaimer}",
-    contact: {t.contact},
-    btnNew: "Nauja formulė →", btnCopy: {t.btnCopy},
-    btnSample: "Užsakyti mėginį →", btnJoinWaitlist: "Prisijungti prie eilės →",
-    sampleTitle: "Užsakyti bandomąjį mėginį",
-    sampleDesc: "Gaukite 50ml bandomąjį mėginį prieš užsakydami visą partiją. Pristatymas per 5–7 darbo dienas.",
-    samplePrice: "Mėginio kaina: 35 EUR (įskaitoma į pirmą užsakymą)",
-    sampleNameLabel: "Vardas, pavardė", sampleEmailLabel: "El. paštas", sampleCompanyLabel: "Įmonė / prekės ženklas",
-    sampleSubmit: "Pateikti užklausą", sampleSent: "✓ Užklausa išsiųsta! Susisieksime per 24h.",
-    waitlistTitle: "Laukimo eilė",
-    waitlistDesc: "Šiuo metu turime didelį užklausų srautą. Prisijunkite prie eilės — informuosime kai galėsime pradėti jūsų projektą.",
-    waitlistPosition: "Jūsų vieta eilėje:",
-    waitlistEstimate: "Apytikslis laukimo laikas:",
-    waitlistWeeks: "sav.",
-    waitlistEmailLabel: "El. paštas pranešimui",
-    waitlistSubmit: "Prisijungti prie eilės",
-    waitlistSent: "✓ Pridėta! Informuosime kai bus jūsų eilė.",
-    // EARNINGS
-    earnTitle: {t.earnTitle},
-    earnSub: {t.earnSub},
-    earnCostLabel: "Savikaina / vnt (su pakuote ir etikete)",
-    mfgCost: {t.mfgCost}, pkgCost: {t.pkgCost}, lblCost: {t.lblCost}, totalCost: {t.totalCost},
-    partija: {t.partija},
-    sellLabel: {t.sellLabel},
-    seg0:"Masinis / FMCG", seg1:"Vidutinis segmentas", seg2:"Premiumo linija", seg3:"Aukštas segmentas", seg4:"Luxury / Niche",
-    mProfit: {t.mProfit}, mMargin: "Marža ", mRevenue: {t.mRevenue}, mNet: {t.mNet},
-    mInvest: {t.mInvest}, mFullCost: {t.mFullCost},
-    mfgBreak: "Gamyba: ", pkgBreak: "Pakuotė: ", lblBreak: "Etiketė: ",
-    breakEven: "Break-even: ", breakEvenSuffix: " vnt — parduokite tiek ir susigrąžinate visą investiciją.",
-    mktTitle: {t.mktTitle},
-    mkt0: {label:"Masinis / FMCG", range:"15–18 EUR", margin:"~6–9 EUR/vnt"},
-    mkt1: {label:"Vidutinis segmentas", range:"20–30 EUR", margin:"~11–21 EUR/vnt"},
-    mkt2: {label:"Premium linija", range:"35–50 EUR", margin:"~26–41 EUR/vnt"},
-    mkt3: {label:"Aukštas segmentas", range:"55–75 EUR", margin:"~46–66 EUR/vnt"},
-    mkt4: {label:"Luxury / Niche", range:"80–100+ EUR", margin:"~71–91+ EUR/vnt"},
-    shelfTitle: {t.shelfTitle},
-    shelfDesc1: "Visos the very lab formuluotės atitinka ES reikalavimus ir turi ",
-    shelfDesc2: "24 mėnesių tinkamumo laikotarpį",
-    shelfDesc3: ". Pakankamai laiko parduoti visą partiją ir planuoti pakartotinį užsakymą.",
-    finePrint: "* Skaičiavimai indikatyvūs. Gamyba = the very lab R&D + gamyba. Pakuotė = Eurovetrocap indikatyvi kaina. Etiketė = ~0.20 EUR/vnt. Neįskaičiuoti: logistika, mokesčiai, prekybos tinklo marža.",
-    back: "← Atgal", next: "Tęsti →", skip: "Praleisti →",
-    // CATEGORIES
-    cats: [
-      { id:"women",     label:"Moterims",    sub:"Veido ir kūno priežiūra",        icon:"◯" },
-      { id:"men",       label:"Vyrams",      sub:"Skutimosi, barzdos ir plaukai",   icon:"◻" },
-      { id:"pets",      label:"Gyvunams",    sub:"Šunims, katems ir kt.",            icon:"◇" },
-      { id:"fragrance", label:"Kvepalai",    sub:"EDP, EDT, kūno dulksna ir kt.",   icon:"◎" },
-      { id:"home",      label:"Namų kvapai", sub:"Žvakės, difuzoriai, purškikliai", icon:"△" },
-    ],
-    products: {
-      women:     ["Serumas","Kremas","Tonikas","Veido aliejus","Kaukė","Akių kremas","Kūno losjonas","Kūno sviestas","Rankų kremas","Lūpų balzamas"],
-      men:       ["Skutimosi puta","Skutimosi gelis","Balzamas po skutimosi","Barzdos aliejus","Barzdos balzamas","Barzdos šampūnas","Barzdos vaškas","Veido kremas","Kūno losjonas","Šampūnas","Kondicionierius","Plaukų serumas","Plaukų vaškas","Plaukų pasta","Plaukų gelis","Pomada"],
-      pets:      ["Šampūnas šunims","Šampūnas katems","Kondicionierius","Kailio aliejus","Letenų kremas","Dezodorantas"],
-      fragrance: ["Eau de Parfum","Eau de Toilette","Kūno dulksna","Plaukų dulksna","Kvepiantis kūno aliejus","Solid perfume","Automobilinis kvapas"],
-      home:      ["Žvakė","Difuzorius (lazdelės)","Kambarinis purškiklis","Patalynės purškiklis","Aromatinis vaškas","Kvapų akmuo","Smilkalai"],
-    },
-    avoid: ["Parabenai","Silikonai","Mineralinis aliejus","Alkoholis","Dirbtiniai kvapai","Sulfatai","PEG junginiai","Sintetiniai dažai"],
-    priceTierLabels: ["500 vnt","1 000 vnt","2 000 vnt","3 000 vnt","5 000 vnt","10 000 vnt"],
-    roiLabel: {t.roiLabel},
-  },
-  en: {
-    // NAV
-    reset: "restart",
-    demo: "DEMO",
-    // HERO
-    heroSub: "Private Label Cosmetics Laboratory",
-    heroTitle1: "Your formula.",
-    heroTitle2: "Our laboratory.",
-    heroDesc: "Build your cosmetics brand with a professional private label laboratory. From concept to finished product.",
-    heroStat1n: "500+", heroStat1t: "Formulas created",
-    heroStat2n: "EU",   heroStat2t: "Regulatory compliant",
-    heroStat3n: "24 mo", heroStat3t: "Product shelf life",
-    strip1: "✓ MOQ from 500 units", strip2: "✓ Eurovetrocap packaging",
-    strip3: "✓ CPNP notification", strip4: "✓ Fast prototyping",
-    // STEP LABELS
-    sl1: "Product type", sl3: "Effects", sl4: "Ingredients",
-    sl5: "Quantity & price", sl6: "Packaging (EVC)", sl7: "Additional info",
-    // STEP 0
-    step0num: "01 / Category",
-    step0title: "What category are you creating?",
-    step0desc: "Answer a few questions — the lab will prepare a formulation direction and indicative price.",
-    // STEP 1
-    step1title: "What type of product are you creating?",
-    step1hint: "Next step: ",
-    // STEP 2
-    step2hint: "Multiple selections allowed",
-    // STEP 3
-    step3titleSkin: "Desired properties",
-    step3title: "Desired effects",
-    step3hint: "Choose up to 3",
-    // STEP 4
-    step4title: "Ingredients to avoid",
-    step4hint: "Optional",
-    // STEP 5
-    step5title: "Quantity & price",
-    minOrder: "Minimum order: 500 units. Price excludes packaging and labelling.",
-    pricePer: "Price / unit", totalSum: "Total amount", qty: "Quantity",
-    nudge1: "Order ", nudge2: " more units", nudge3: " and price drops to ",
-    nudge4: " (save ~", nudge5: " EUR)",
-    priceNote: "Indicative price for formulation and manufacturing. Final price confirmed after consultation.",
-    // STEP 6
-    step6title: "Packaging",
-    pkgDesc: "Select packaging from the Eurovetrocap catalogue (2026) and preferred volume. Lab will confirm compatibility.",
-    pkgNone: "No packaging available in catalogue for this product — the lab will suggest options during consultation.",
-    pkgSelected: "Selected packaging", pkgTotal: "Packaging total",
-    sizeLabel: "Volume", unitPrice: "unit price", pkgCompat: "Compatibility with the formula will be confirmed during consultation.",
-    // STEP 7
-    step7title: "Additional information",
-    step7hint: "Optional — texture, scent, positioning, inspiration",
-    step7ph: "e.g. Natural line, vegan, luxury feel, specific scent...",
-    summaryTitle: "Request summary",
-    sCat: "Category", sProd: "Product", sEff: "Effects", sAvoid: "Without", sQty: "Quantity", sPkg: "Packaging",
-    btnGet: "Get direction →", btnLoading: "Formulating...",
-    // RESULT
-    resSubtitle: "the very lab / formulation direction",
-    resQty: "Quantity", resPriceU: "Price / unit", resTotal: "Total amount",
-    pkgResultTitle: "Selected packaging (Eurovetrocap 2026)",
-    formulaLine: "Formula: ", pkgLine: "Packaging: ", totalLine: "Total (excl. labels)",
-    pkgCompatNote: "Formula compatibility will be confirmed during consultation.",
-    disclaimer: "Preliminary formulation direction and indicative price. Final formula and exact price provided after lab consultation.",
-    contact: "Contact us: ",
-    btnNew: "New formula →", btnCopy: "Copy",
-    btnSample: "Order a sample →", btnJoinWaitlist: "Join the queue →",
-    sampleTitle: "Order a sample",
-    sampleDesc: "Get a 50ml sample before committing to a full batch. Delivery in 5–7 business days.",
-    samplePrice: "Sample price: €35 (credited towards your first order)",
-    sampleNameLabel: "Full name", sampleEmailLabel: "Email", sampleCompanyLabel: "Company / brand name",
-    sampleSubmit: "Submit request", sampleSent: "✓ Request sent! We'll be in touch within 24h.",
-    waitlistTitle: "Waitlist",
-    waitlistDesc: "We're currently at full capacity. Join the waitlist and we'll notify you when we can start your project.",
-    waitlistPosition: "Your position:",
-    waitlistEstimate: "Estimated wait:",
-    waitlistWeeks: "wks",
-    waitlistEmailLabel: "Email for notification",
-    waitlistSubmit: "Join the queue",
-    waitlistSent: "✓ Added! We'll notify you when it's your turn.",
-    // EARNINGS
-    earnTitle: "How much can you earn?",
-    earnSub: "Potential earnings",
-    earnCostLabel: "Cost price / unit (incl. packaging & label)",
-    mfgCost: "Manufacturing (the very lab): ", pkgCost: "Packaging (EVC): ", lblCost: "Label: ", totalCost: "Total: ~",
-    partija: " unit batch",
-    sellLabel: "Selling price",
-    seg0:"Mass market / FMCG", seg1:"Mid-range segment", seg2:"Premium line", seg3:"High-end segment", seg4:"Luxury / Niche",
-    mProfit: "Profit / unit", mMargin: "Margin ", mRevenue: "Total revenue", mNet: "Net profit",
-    mInvest: "Investment", mFullCost: "Full batch cost",
-    mfgBreak: "Manufacturing: ", pkgBreak: "Packaging: ", lblBreak: "Label: ",
-    breakEven: "Break-even: ", breakEvenSuffix: " units — sell this many to recover your full investment.",
-    mktTitle: "Market examples",
-    mkt0: {label:"Mass market / FMCG", range:"€15–18", margin:"~€6–9/unit"},
-    mkt1: {label:"Mid-range segment", range:"€20–30", margin:"~€11–21/unit"},
-    mkt2: {label:"Premium line", range:"€35–50", margin:"~€26–41/unit"},
-    mkt3: {label:"High-end segment", range:"€55–75", margin:"~€46–66/unit"},
-    mkt4: {label:"Luxury / Niche", range:"€80–100+", margin:"~€71–91+/unit"},
-    shelfTitle: "2-year shelf life",
-    shelfDesc1: "All the very lab formulas comply with EU regulations and carry a ",
-    shelfDesc2: "24-month shelf life",
-    shelfDesc3: ". Plenty of time to sell your full batch and plan a reorder.",
-    finePrint: "* Estimates only. Manufacturing = the very lab R&D + production. Packaging = Eurovetrocap indicative price. Label = ~€0.20/unit. Excludes: logistics, taxes, retail margin.",
-    back: "← Back", next: "Continue →", skip: "Skip →",
-    // CATEGORIES
-    cats: [
-      { id:"women",     label:"Women",      sub:"Face & body care",                icon:"◯" },
-      { id:"men",       label:"Men",        sub:"Shaving, beard & hair",           icon:"◻" },
-      { id:"pets",      label:"Pets",       sub:"Dogs, cats & more",               icon:"◇" },
-      { id:"fragrance", label:"Fragrance",  sub:"EDP, EDT, body mist & more",      icon:"◎" },
-      { id:"home",      label:"Home scents",sub:"Candles, diffusers, sprays",      icon:"△" },
-    ],
-    products: {
-      women:     ["Serum","Face cream","Toner","Face oil","Mask","Eye cream","Body lotion","Body butter","Hand cream","Lip balm"],
-      men:       ["Shaving foam","Shaving gel","After-shave balm","Beard oil","Beard balm","Beard shampoo","Beard wax","Face cream","Body lotion","Shampoo","Conditioner","Hair serum","Hair wax","Hair paste","Hair gel","Pomade"],
-      pets:      ["Dog shampoo","Cat shampoo","Conditioner","Coat oil","Paw cream","Deodorant"],
-      fragrance: ["Eau de Parfum","Eau de Toilette","Body mist","Hair mist","Scented body oil","Solid perfume","Car fragrance"],
-      home:      ["Candle","Reed diffuser","Room spray","Linen spray","Wax melt","Scent stone","Incense"],
-    },
-    avoid: ["Parabens","Silicones","Mineral oil","Alcohol","Artificial fragrances","Sulphates","PEG compounds","Synthetic dyes"],
-    priceTierLabels: ["500 units","1 000 units","2 000 units","3 000 units","5 000 units","10 000 units"],
-    roiLabel: "ROI ",
-  },
-};
-
-
 // THE VERY LAB BRAND TOKENS
 const C = {
   red:     "#9F132D",
@@ -477,7 +231,7 @@ function PricingStep({ onBack, onNext, pricing, setPricing }) {
         Indikatyvi kaina formuluotei ir gamybai. Galutine kaina pateikiama po konsultacijos.
       </p>
       <div style={{ display: "flex", gap: "1rem" }}>
-        <button className="btn ghost" onClick={onBack}>{{t.back}}</button>
+        <button className="btn ghost" onClick={onBack}>{"\u2190 Atgal"}</button>
         <button className="btn" onClick={confirm}>{"Testi \u2192"}</button>
       </div>
     </div>
@@ -857,7 +611,7 @@ function PackagingStep({ onBack, onNext, productType, packaging, setPackaging, s
             border: "1.5px solid " + (filter === t ? C.red : "rgba(0,0,0,0.12)"),
             background: filter === t ? C.red : C.white, color: filter === t ? C.white : C.black,
             cursor: "pointer", transition: "all 0.15s", fontWeight: filter === t ? 600 : 400,
-          }}>{av}</button>
+          }}>{t}</button>
         ))}
       </div>
 
@@ -961,7 +715,7 @@ function PackagingStep({ onBack, onNext, productType, packaging, setPackaging, s
 }
 
 // ---- EARNINGS CALCULATOR COMPONENT ----
-function EarningsCalc({ costPerUnit, qty, packaging, selectedSizes, t }) {
+function EarningsCalc({ costPerUnit, qty, packaging, selectedSizes }) {
   const formulaCost = costPerUnit || 5.50;   // the very lab: R&D + gamyba
   const totalQty = qty || 500;
 
@@ -990,11 +744,11 @@ function EarningsCalc({ costPerUnit, qty, packaging, selectedSizes, t }) {
   const roi = Math.round(((totalProfit) / (fullCost * totalQty)) * 100);
 
   // Segment label
-  const segment = sellPrice <= 18 ? t.seg0
-    : sellPrice <= 30 ? t.seg1
-    : sellPrice <= 50 ? t.seg2
-    : sellPrice <= 75 ? t.seg3
-    : t.seg4;
+  const segment = sellPrice <= 18 ? "Masinis / FMCG"
+    : sellPrice <= 30 ? "Vidutinis segmentas"
+    : sellPrice <= 50 ? "Premiumo linija"
+    : sellPrice <= 75 ? "Aukštas segmentas"
+    : "Luxury / Niche";
 
   const segColor = sellPrice <= 18 ? "#888"
     : sellPrice <= 30 ? "#b07d3a"
@@ -1083,7 +837,7 @@ function EarningsCalc({ costPerUnit, qty, packaging, selectedSizes, t }) {
             <div style={{ fontFamily:"'Afacad',sans-serif", fontSize:"1.6rem", fontWeight:700, color: margin > 0 ? "#2d7a3a" : C.red, lineHeight:1 }}>
               {margin > 0 ? "+" : ""}{margin.toFixed(2)} <span style={{ fontSize:"0.85rem", fontWeight:400, opacity:0.7 }}>EUR</span>
             </div>
-            <div style={{ fontSize:"0.72rem", opacity:0.45, marginTop:"0.3rem" }}>{t.mMargin + + marginPct + "%"}</div>
+            <div style={{ fontSize:"0.72rem", opacity:0.45, marginTop:"0.3rem" }}>{"Marža " + marginPct + "%"}</div>
           </div>
 
           <div style={{ padding:"1.1rem", background:"rgba(159,19,45,0.05)", border:"1.5px solid rgba(159,19,45,0.15)" }}>
@@ -1109,9 +863,9 @@ function EarningsCalc({ costPerUnit, qty, packaging, selectedSizes, t }) {
             </div>
             <div style={{ fontSize:"0.72rem", opacity:0.45, marginTop:"0.3rem" }}>{"Pilna partijos kaina"}</div>
             <div style={{ marginTop:"0.6rem", fontSize:"0.7rem", lineHeight:1.8, opacity:0.55 }}>
-              <div>{{t.mfgBreak} + Math.round(formulaCost * totalQty).toLocaleString("lt-LT") + " EUR"}</div>
-              <div>{{t.pkgBreak} + Math.round(pkgCostPerUnit * totalQty).toLocaleString("lt-LT") + " EUR"}</div>
-              <div>{{t.lblBreak} + Math.round(labelCost * totalQty).toLocaleString("lt-LT") + " EUR"}</div>
+              <div>{"Gamyba: " + Math.round(formulaCost * totalQty).toLocaleString("lt-LT") + " EUR"}</div>
+              <div>{"Pakuotė: " + Math.round(pkgCostPerUnit * totalQty).toLocaleString("lt-LT") + " EUR"}</div>
+              <div>{"Etiketė: " + Math.round(labelCost * totalQty).toLocaleString("lt-LT") + " EUR"}</div>
             </div>
           </div>
         </div>
@@ -1119,8 +873,9 @@ function EarningsCalc({ costPerUnit, qty, packaging, selectedSizes, t }) {
         {/* Break-even info */}
         {margin > 0 && (
           <div style={{ background:C.cream, border:"1.5px solid rgba(0,0,0,0.08)", padding:"1rem 1.2rem", marginBottom:"1.5rem", fontSize:"0.82rem", lineHeight:1.7 }}>
-            <strong>{t.breakEven}</strong>
-            {Math.ceil((fullCost * totalQty) / margin).toLocaleString("lt-LT") + t.breakEvenSuffix}
+            <strong>{"Break-even: "}</strong>
+            {Math.ceil((fullCost * totalQty) / margin).toLocaleString("lt-LT") + " vnt"}
+            {" — parduokite tiek ir susigrąžinate visą investiciją."}
           </div>
         )}
 
@@ -1129,11 +884,11 @@ function EarningsCalc({ costPerUnit, qty, packaging, selectedSizes, t }) {
           <div style={{ fontSize:"0.68rem", letterSpacing:"0.1em", textTransform:"uppercase", opacity:0.4, marginBottom:"0.8rem" }}>Rinkos pavyzdžiai</div>
           <div style={{ display:"flex", flexDirection:"column", gap:"0.4rem" }}>
             {[
-              { ...t.mkt0, color:"#888" },
-              { ...t.mkt1, color:"#b07d3a" },
-              { ...t.mkt2, color:C.red },
-              { ...t.mkt3, color:"#7a2d8c" },
-              { ...t.mkt4, color:"#1a1a1a" },
+              { label:"Masinis / FMCG", range:"15–18 EUR", margin:"~6–9 EUR/vnt", color:"#888" },
+              { label:"Vidutinis segmentas", range:"20–30 EUR", margin:"~11–21 EUR/vnt", color:"#b07d3a" },
+              { label:"Premium linija", range:"35–50 EUR", margin:"~26–41 EUR/vnt", color:C.red },
+              { label:"Aukštas segmentas", range:"55–75 EUR", margin:"~46–66 EUR/vnt", color:"#7a2d8c" },
+              { label:"Luxury / Niche", range:"80–100+ EUR", margin:"~71–91+ EUR/vnt", color:"#1a1a1a" },
             ].map((row, i) => (
               <div key={i} style={{ display:"flex", alignItems:"center", gap:"0.8rem", padding:"0.5rem 0.8rem", background: sellPrice >= [15,20,35,55,80][i] && sellPrice < [19,35,55,80,101][i] ? row.color + "12" : "transparent", borderLeft: "3px solid " + (sellPrice >= [15,20,35,55,80][i] && sellPrice < [19,35,55,80,101][i] ? row.color : "transparent"), transition:"all 0.2s" }}>
                 <div style={{ width:"8px", height:"8px", borderRadius:"50%", background:row.color, flexShrink:0 }} />
@@ -1151,9 +906,9 @@ function EarningsCalc({ costPerUnit, qty, packaging, selectedSizes, t }) {
           <div>
             <div style={{ fontWeight:700, fontSize:"0.95rem", marginBottom:"0.2rem" }}>{"2 metų galiojimas"}</div>
             <div style={{ fontSize:"0.78rem", opacity:0.75, lineHeight:1.5 }}>
-              {t.shelfDesc1}
-              <strong>{t.shelfDesc2}</strong>
-              {t.shelfDesc3}
+              {"Visos the very lab formuluotės atitinka ES reikalavimus ir turi " }
+              <strong>{"24 mėnesių tinkamumo laikotarpį"}</strong>
+              {". Pakankamai laiko parduoti visą partiją ir planuoti pakartotinį užsakymą."}
             </div>
           </div>
         </div>
@@ -1162,126 +917,7 @@ function EarningsCalc({ costPerUnit, qty, packaging, selectedSizes, t }) {
 
       {/* Fine print */}
       <div style={{ padding:"0.8rem 0", fontSize:"0.7rem", opacity:0.3, lineHeight:1.6 }}>
-        {t.finePrint}
-      </div>
-    </div>
-  );
-}
-
-// ---- SAMPLE REQUEST COMPONENT ----
-function SampleRequest({ t, C, pricing, form, onClose }) {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [company, setCompany] = useState('');
-  const [sent, setSent] = useState(false);
-
-  const submit = () => {
-    if (!name || !email) return;
-    setSent(true);
-  };
-
-  if (sent) return (
-    <div style={{ background: C.white, border: '1.5px solid rgba(0,0,0,0.08)', padding: '2rem', textAlign: 'center' }}>
-      <div style={{ fontSize: '2.5rem', marginBottom: '1rem' }}>🧪</div>
-      <div style={{ fontSize: '1.1rem', fontWeight: 700, color: C.red, marginBottom: '0.5rem' }}>{t.sampleSent}</div>
-      <button className="btn ghost" onClick={onClose} style={{ marginTop: '1rem' }}>{t.btnNew}</button>
-    </div>
-  );
-
-  return (
-    <div style={{ background: C.white, border: '1.5px solid rgba(0,0,0,0.08)' }}>
-      <div style={{ background: C.red, color: C.white, padding: '1.5rem 2rem' }}>
-        <div style={{ fontSize: '0.62rem', letterSpacing: '0.15em', textTransform: 'uppercase', opacity: 0.6, marginBottom: '0.4rem' }}>the very lab</div>
-        <div style={{ fontSize: '1.4rem', fontWeight: 700 }}>🧪 {t.sampleTitle}</div>
-      </div>
-      <div style={{ padding: '1.8rem' }}>
-        <p style={{ fontSize: '0.88rem', lineHeight: 1.6, marginBottom: '0.8rem', opacity: 0.75 }}>{t.sampleDesc}</p>
-        <div style={{ background: C.pink, borderLeft: '3px solid ' + C.red, padding: '0.7rem 1rem', marginBottom: '1.5rem', fontSize: '0.82rem', fontWeight: 600 }}>{t.samplePrice}</div>
-
-        {/* Summary */}
-        <div style={{ background: C.cream, padding: '0.8rem 1rem', marginBottom: '1.5rem', fontSize: '0.82rem', lineHeight: 1.8 }}>
-          <div style={{ fontSize: '0.62rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: C.red, fontWeight: 600, marginBottom: '0.3rem' }}>Formula</div>
-          <div>{form.type} {form.effects.length > 0 ? '· ' + form.effects.slice(0,2).join(', ') : ''}</div>
-          {pricing.qty > 0 && <div style={{ marginTop: '0.3rem', color: C.red, fontWeight: 700 }}>{pricing.qty} units · ~{pricing.total?.toLocaleString('lt-LT')} EUR</div>}
-        </div>
-
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem', marginBottom: '1.5rem' }}>
-          {[
-            { label: t.sampleNameLabel, val: name, set: setName, type: 'text' },
-            { label: t.sampleEmailLabel, val: email, set: setEmail, type: 'email' },
-            { label: t.sampleCompanyLabel, val: company, set: setCompany, type: 'text' },
-          ].map(({ label, val, set, type }) => (
-            <div key={label}>
-              <div style={{ fontSize: '0.72rem', opacity: 0.5, marginBottom: '0.3rem', letterSpacing: '0.06em', textTransform: 'uppercase' }}>{label}</div>
-              <input type={type} value={val} onChange={e => set(e.target.value)}
-                style={{ width: '100%', border: '1.5px solid rgba(0,0,0,0.12)', padding: '0.7rem 1rem', fontFamily: "'Afacad',sans-serif", fontSize: '0.9rem', outline: 'none', background: C.white }}
-                onFocus={e => e.target.style.borderColor = C.red}
-                onBlur={e => e.target.style.borderColor = 'rgba(0,0,0,0.12)'} />
-            </div>
-          ))}
-        </div>
-        <div style={{ display: 'flex', gap: '1rem' }}>
-          <button className="btn ghost" onClick={onClose}>{t.back || '← Back'}</button>
-          <button className="btn" onClick={submit} disabled={!name || !email}>{t.sampleSubmit}</button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// ---- WAITLIST COMPONENT ----
-function Waitlist({ t, C, onClose }) {
-  const [email, setEmail] = useState('');
-  const [sent, setSent] = useState(false);
-  const position = Math.floor(Math.random() * 8) + 4; // 4–11
-  const weeks = Math.ceil(position / 2);
-
-  const submit = () => {
-    if (!email) return;
-    setSent(true);
-  };
-
-  return (
-    <div style={{ background: C.white, border: '1.5px solid rgba(0,0,0,0.08)' }}>
-      <div style={{ background: C.black, color: C.white, padding: '1.5rem 2rem' }}>
-        <div style={{ fontSize: '0.62rem', letterSpacing: '0.15em', textTransform: 'uppercase', opacity: 0.5, marginBottom: '0.4rem' }}>the very lab</div>
-        <div style={{ fontSize: '1.4rem', fontWeight: 700 }}>⏳ {t.waitlistTitle}</div>
-      </div>
-      <div style={{ padding: '1.8rem' }}>
-        <p style={{ fontSize: '0.88rem', lineHeight: 1.6, marginBottom: '1.5rem', opacity: 0.75 }}>{t.waitlistDesc}</p>
-
-        {/* Queue stats */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.8rem', marginBottom: '1.5rem' }}>
-          <div style={{ border: '1.5px solid rgba(0,0,0,0.08)', padding: '1rem', textAlign: 'center' }}>
-            <div style={{ fontSize: '0.62rem', opacity: 0.45, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.4rem' }}>{t.waitlistPosition}</div>
-            <div style={{ fontSize: '2rem', fontWeight: 700, color: C.red, lineHeight: 1 }}>#{position}</div>
-          </div>
-          <div style={{ border: '1.5px solid rgba(0,0,0,0.08)', padding: '1rem', textAlign: 'center' }}>
-            <div style={{ fontSize: '0.62rem', opacity: 0.45, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.4rem' }}>{t.waitlistEstimate}</div>
-            <div style={{ fontSize: '2rem', fontWeight: 700, lineHeight: 1 }}>{weeks} <span style={{ fontSize: '1rem', fontWeight: 400, opacity: 0.5 }}>{t.waitlistWeeks}</span></div>
-          </div>
-        </div>
-
-        {sent ? (
-          <div style={{ textAlign: 'center', padding: '1.5rem', background: C.pink, borderLeft: '3px solid ' + C.red }}>
-            <div style={{ fontWeight: 700, color: C.red }}>{t.waitlistSent}</div>
-            <div style={{ fontSize: '0.78rem', opacity: 0.6, marginTop: '0.3rem' }}>{email}</div>
-          </div>
-        ) : (
-          <div style={{ display: 'flex', gap: '0.8rem', alignItems: 'flex-end' }}>
-            <div style={{ flex: 1 }}>
-              <div style={{ fontSize: '0.72rem', opacity: 0.5, marginBottom: '0.3rem', letterSpacing: '0.06em', textTransform: 'uppercase' }}>{t.waitlistEmailLabel}</div>
-              <input type="email" value={email} onChange={e => setEmail(e.target.value)}
-                placeholder="hello@yourbrand.com"
-                style={{ width: '100%', border: '1.5px solid rgba(0,0,0,0.12)', padding: '0.7rem 1rem', fontFamily: "'Afacad',sans-serif", fontSize: '0.9rem', outline: 'none', background: C.white }}
-                onFocus={e => e.target.style.borderColor = C.red}
-                onBlur={e => e.target.style.borderColor = 'rgba(0,0,0,0.12)'} />
-            </div>
-            <button className="btn" onClick={submit} disabled={!email}>{t.waitlistSubmit}</button>
-          </div>
-        )}
-
-        <button className="btn ghost" onClick={onClose} style={{ marginTop: '1rem', width: '100%' }}>{t.back || '← Back'}</button>
+        {"* Skaičiavimai indikatyvūs. Gamyba = the very lab R&D + gamyba. Pakuotė = Eurovetrocap indikatyvi kaina. Etiketė = ~0.20 EUR/vnt. Neįskaičiuoti: logistika, mokesčiai, prekybos tinklo marža."}
       </div>
     </div>
   );
@@ -1289,8 +925,8 @@ function Waitlist({ t, C, onClose }) {
 
 export default function App() {
   const [lang, setLang] = useState("en");
-  const t = T[lang];
-  const step0num = t.step0num;
+  const t_en = {cats:[{id:"women",label:"Women",sub:"Face & body care",icon:"◯"},{id:"men",label:"Men",sub:"Shaving, beard & hair",icon:"◻"},{id:"pets",label:"Pets",sub:"Dogs, cats & more",icon:"◇"},{id:"fragrance",label:"Fragrance",sub:"EDP, EDT, body mist & more",icon:"◎"},{id:"home",label:"Home scents",sub:"Candles, diffusers, sprays",icon:"△"}],products:{women:["Serum","Face cream","Toner","Face oil","Mask","Eye cream","Body lotion","Body butter","Hand cream","Lip balm"],men:["Shaving foam","Shaving gel","After-shave balm","Beard oil","Beard balm","Beard shampoo","Beard wax","Face cream","Body lotion","Shampoo","Conditioner","Hair serum","Hair wax","Hair paste","Hair gel","Pomade"],pets:["Dog shampoo","Cat shampoo","Conditioner","Coat oil","Paw cream","Deodorant"],fragrance:["Eau de Parfum","Eau de Toilette","Body mist","Hair mist","Scented body oil","Solid perfume","Car fragrance"],home:["Candle","Reed diffuser","Room spray","Linen spray","Wax melt","Scent stone","Incense"]},avoid:["Parabens","Silicones","Mineral oil","Alcohol","Artificial fragrances","Sulphates","PEG compounds","Synthetic dyes"],back:"← Back",next:"Continue →",skip:"Skip →",step0num:"01 / Category",step0title:"What category are you creating?",step0desc:"Answer a few questions — the lab will prepare a formulation direction.",step1title:"What type of product are you creating?",step1hint:"Next step: ",step2hint:"Multiple selections allowed",step3titleSkin:"Desired properties",step3title:"Desired effects",step3hint:"Choose up to 3",step4title:"Ingredients to avoid",step4hint:"Optional",step5title:"Quantity & price",minOrder:"Minimum order: 500 units.",pricePer:"Price / unit",totalSum:"Total amount",qty:"Quantity",nudge1:"Order ",nudge2:" more units",nudge3:" and price drops to ",nudge4:" (save ~",nudge5:" EUR)",priceNote:"Indicative price. Final price after consultation.",step6title:"Packaging",pkgDesc:"Select packaging from Eurovetrocap catalogue (2026).",pkgNone:"No packaging available — lab will suggest options.",pkgSelected:"Selected packaging",pkgTotal:"Packaging total",sizeLabel:"Volume",unitPrice:"unit price",pkgCompat:"Compatibility confirmed during consultation.",step7title:"Additional information",step7hint:"Optional — texture, scent, positioning",step7ph:"e.g. Natural line, vegan, luxury feel...",summaryTitle:"Request summary",sCat:"Category",sProd:"Product",sEff:"Effects",sAvoid:"Without",sQty:"Quantity",sPkg:"Packaging",btnGet:"Get direction →",btnLoading:"Formulating...",resSubtitle:"the very lab / formulation direction",resQty:"Quantity",resPriceU:"Price / unit",resTotal:"Total amount",pkgResultTitle:"Selected packaging (Eurovetrocap 2026)",formulaLine:"Formula: ",pkgLine:"Packaging: ",totalLine:"Total (excl. labels)",pkgCompatNote:"Formula compatibility confirmed during consultation.",disclaimer:"Preliminary direction and indicative price. Final price after lab consultation.",contact:"Contact us: ",btnNew:"New formula →",btnCopy:"Copy",earnTitle:"How much can you earn?",earnSub:"Potential earnings",earnCostLabel:"Cost price / unit (incl. packaging & label)",mfgCost:"Manufacturing (the very lab): ",pkgCost:"Packaging (EVC): ",lblCost:"Label: ",totalCost:"Total: ~",partija:" unit batch",sellLabel:"Selling price",seg0:"Mass market / FMCG",seg1:"Mid-range segment",seg2:"Premium line",seg3:"High-end segment",seg4:"Luxury / Niche",mProfit:"Profit / unit",mMargin:"Margin ",mRevenue:"Total revenue",mNet:"Net profit",mInvest:"Investment",mFullCost:"Full batch cost",mfgBreak:"Manufacturing: ",pkgBreak:"Packaging: ",lblBreak:"Label: ",breakEven:"Break-even: ",breakEvenSuffix:" units — sell this many to recover your full investment.",mktTitle:"Market examples",mkt0:{label:"Mass market",range:"€15–18",margin:"~€6–9/unit"},mkt1:{label:"Mid-range",range:"€20–30",margin:"~€11–21/unit"},mkt2:{label:"Premium",range:"€35–50",margin:"~€26–41/unit"},mkt3:{label:"High-end",range:"€55–75",margin:"~€46–66/unit"},mkt4:{label:"Luxury",range:"€80–100+",margin:"~€71–91+/unit"},shelfTitle:"2-year shelf life",shelfDesc1:"All the very lab formulas comply with EU regulations and carry a ",shelfDesc2:"24-month shelf life",shelfDesc3:". Plenty of time to sell your full batch.",finePrint:"* Estimates only. Manufacturing = the very lab R&D + production. Label = ~€0.20/unit.",heroTitle1:"Your formula.",heroTitle2:"Our laboratory.",heroStat1n:"500+",heroStat1t:"Formulas created",heroStat2n:"EU",heroStat2t:"Regulatory compliant",heroStat3n:"24 mo",heroStat3t:"Product shelf life",strip1:"✓ MOQ from 500 units",strip2:"✓ Eurovetrocap packaging",strip3:"✓ CPNP notification",strip4:"✓ Fast prototyping",roiLabel:"ROI "};
+  const t = lang==="en" ? t_en : {};
   const [step, setStep] = useState(0);
   const [form, setForm] = useState({ cat: "", type: "", skin: [], effects: [], avoid: [], brief: "" });
   const [pricing, setPricing] = useState({ qty: 0, pricePerUnit: 0, total: 0 });
@@ -1299,8 +935,6 @@ export default function App() {
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [showSample, setShowSample] = useState(false);
-  const [showWaitlist, setShowWaitlist] = useState(false);
   const topRef = useRef(null);
   const resultRef = useRef(null);
 
@@ -1330,7 +964,7 @@ export default function App() {
   };
 
   const catLabel = () => (CATEGORIES.find(x => x.id === form.cat) || {}).label || "";
-  const SLABELS = ["", t.sl1, "", t.sl3, t.sl4, t.sl5, t.sl6, t.sl7];
+  const SLABELS = ["","Produkto tipas","","Efektai","Ingredientai","Kiekis ir kaina","Pakuote (EVC)","Papildoma info"];
   const stepLabel = () => step === 2 ? ctx().skinLabel : (SLABELS[step] || "");
   const pct = step === 0 ? 0 : step >= 8 ? 100 : ((step - 1) / 7) * 100;
 
@@ -1443,17 +1077,16 @@ IŠSKIRTINUMAS
           the very lab
         </div>
         <div style={{ display:"flex", alignItems:"center", gap:"1rem" }}>
-          <div style={{ fontSize:"0.62rem", letterSpacing:"0.1em", textTransform:"uppercase", background:"#f59e0b", color:"#000", padding:"0.2rem 0.6rem", fontWeight:700 }}>{t.demo}</div>
+          <div style={{ fontSize:"0.62rem", letterSpacing:"0.1em", textTransform:"uppercase", background:"#f59e0b", color:"#000", padding:"0.2rem 0.6rem", fontWeight:700 }}>DEMO</div>
           <div style={{ display:"flex", gap:"0.3rem" }}>
             {["lt","en"].map(l => (
               <button key={l} onClick={() => setLang(l)} style={{
                 padding:"0.15rem 0.5rem", fontSize:"0.72rem", fontFamily:"'Afacad',sans-serif",
-                border:"1.5px solid " + (lang===l ? C.red : "rgba(0,0,0,0.15)"),
-                background: lang===l ? C.red : "transparent",
-                color: lang===l ? C.white : C.black,
-                cursor:"pointer", fontWeight: lang===l ? 700 : 400, letterSpacing:"0.04em",
-                textTransform:"uppercase",
-              }}>{l==="lt" ? "🇱🇹 LT" : "🇬🇧 EN"}</button>
+                border:"1.5px solid "+(lang===l?C.red:"rgba(0,0,0,0.15)"),
+                background:lang===l?C.red:"transparent",
+                color:lang===l?C.white:C.black,
+                cursor:"pointer", fontWeight:lang===l?700:400, textTransform:"uppercase",
+              }}>{l==="lt"?"🇱🇹 LT":"🇬🇧 EN"}</button>
             ))}
           </div>
           {step > 0 && step < 8 && (
@@ -1466,46 +1099,17 @@ IŠSKIRTINUMAS
 
       {/* HERO */}
       {step === 0 && (
-        <>
-          {/* Hero banner */}
-          <div style={{ background:C.red, padding:"4.5rem 2rem 4rem", textAlign:"center" }}>
-            <div style={{ maxWidth:"620px", margin:"0 auto" }}>
-              <p style={{ fontSize:"0.68rem", letterSpacing:"0.25em", textTransform:"uppercase", color:"rgba(255,255,255,0.55)", marginBottom:"1.2rem" }}>Private Label Kosmetikos Laboratorija</p>
-              <h1 style={{ fontFamily:"'Afacad',sans-serif", fontSize:"clamp(2.4rem,6vw,3.8rem)", fontWeight:700, color:C.white, lineHeight:1.08, marginBottom:"1.4rem", letterSpacing:"-0.02em" }}>
-                {t.heroTitle1}<br />{t.heroTitle2}
-              </h1>
-              <p style={{ fontSize:"1.05rem", color:"rgba(255,255,255,0.72)", lineHeight:1.65, maxWidth:"440px", margin:"0 auto 2rem" }}>
-                Sukurkite savo kosmetikos liniją su profesionalia privačios etiketės laboratorija. Nuo idėjos iki gatavo produkto.
-              </p>
-              <div style={{ display:"flex", justifyContent:"center", gap:"1.5rem", flexWrap:"wrap" }}>
-                {[
-                  { n:"500+", t:"Sukurtų formuluočių" },
-                  { n:"ES", t:"Atitiktis reglamentams" },
-                  { n:"24 mėn", t:"Produkto galiojimas" },
-                ].map((s,i) => (
-                  <div key={i} style={{ textAlign:"center" }}>
-                    <div style={{ fontFamily:"'Afacad',sans-serif", fontSize:"1.6rem", fontWeight:700, color:C.white, lineHeight:1 }}>{s.n}</div>
-                    <div style={{ fontSize:"0.68rem", color:"rgba(255,255,255,0.55)", letterSpacing:"0.06em", textTransform:"uppercase", marginTop:"0.3rem" }}>{s.t}</div>
-                  </div>
-                ))}
-              </div>
-            </div>
+        <div style={{ background:C.red, padding:"4rem 2rem 3.5rem", textAlign:"center" }}>
+          <div style={{ maxWidth:"600px", margin:"0 auto" }}>
+            <p style={{ fontSize:"0.72rem", letterSpacing:"0.2em", textTransform:"uppercase", color:"rgba(255,255,255,0.6)", marginBottom:"1rem" }}>Private Label Kosmetikos Laboratorija</p>
+            <h1 style={{ fontFamily:"'Afacad',sans-serif", fontSize:"clamp(2.2rem,6vw,3.5rem)", fontWeight:700, color:C.white, lineHeight:1.1, marginBottom:"1.2rem", letterSpacing:"-0.01em" }}>
+              Jūsų receptūra.<br />Mūsų laboratorija.
+            </h1>
+            <p style={{ fontSize:"1rem", color:"rgba(255,255,255,0.7)", lineHeight:1.6, maxWidth:"420px", margin:"0 auto" }}>
+              Sukurkite savo kosmetikos liniją su profesionalia privačios etiketės laboratorija. Nuo idėjos iki gatavo produkto.
+            </p>
           </div>
-
-          {/* Trusted by / process strip */}
-          <div style={{ background:C.black, color:C.white, padding:"1.1rem 2rem" }}>
-            <div style={{ maxWidth:"660px", margin:"0 auto", display:"flex", alignItems:"center", justifyContent:"center", gap:"2rem", flexWrap:"wrap" }}>
-              {[
-                "✓ MOQ nuo 500 vnt",
-                "✓ Eurovetrocap pakuotės",
-                "✓ CPNP notifikacija",
-                "✓ Greitas prototipas",
-              ].map((t,i) => (
-                <span key={i} style={{ fontSize:"0.75rem", letterSpacing:"0.05em", opacity:0.8 }}>{t}</span>
-              ))}
-            </div>
-          </div>
-        </>
+        </div>
       )}
 
       {/* MAIN */}
@@ -1528,11 +1132,10 @@ IŠSKIRTINUMAS
         {/* STEP 0: Categories */}
         {step === 0 && (
           <div className="fade">
-            <p style={{ fontSize:"0.72rem", letterSpacing:"0.12em", textTransform:"uppercase", color:C.red, fontWeight:600, marginBottom:"0.6rem" }}>01 / Kategorija</p>
-            <h2 style={{ fontSize:"1.6rem", fontWeight:700, marginBottom:"0.5rem", lineHeight:1.2 }}>Kokios kategorijos produktą kuriate?</h2>
-            <p style={{ fontSize:"0.85rem", opacity:0.45, marginBottom:"2rem", lineHeight:1.5 }}>Atsakykite į kelis klausimus — laboratorija parengs formulavimo kryptį ir indikatyvią kainą.</p>
+            <p style={{ fontSize:"0.72rem", letterSpacing:"0.12em", textTransform:"uppercase", color:C.red, fontWeight:600, marginBottom:"0.6rem" }}>01 / Pasirinkite kategoriją</p>
+            <h2 style={{ fontSize:"1.6rem", fontWeight:700, marginBottom:"2rem", lineHeight:1.2 }}>Kokios kategorijos produktą kuriate?</h2>
             <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(170px,1fr))", gap:"0.8rem" }}>
-              {t.cats.map(cat => (
+              {CATEGORIES.map(cat => (
                 <button key={cat.id} className={"catcard"+(form.cat===cat.id?" sel":"")} onClick={()=>selectCat(cat.id)}>
                   <div style={{ fontSize:"1.4rem", marginBottom:"0.7rem", color:C.red, opacity:0.7 }}>{cat.icon}</div>
                   <div style={{ fontSize:"1.1rem", fontWeight:700, marginBottom:"0.25rem" }}>{cat.label}</div>
@@ -1548,7 +1151,7 @@ IŠSKIRTINUMAS
           <div className="fade">
             <h2 style={{ fontSize:"1.5rem", fontWeight:700, marginBottom:"1.8rem" }}>Kokio tipo produktą kuriate?</h2>
             <div style={{ display:"flex", flexWrap:"wrap", gap:"0.55rem", marginBottom:"2rem" }}>
-              {(t.products[form.cat]||[]).map(t => (
+              {(PRODUCTS_BY_CAT[form.cat]||[]).map(t => (
                 <button key={t} className={"chip"+(form.type===t?" sel":"")} onClick={()=>selectType(t)}>{t}</button>
               ))}
             </div>
@@ -1606,8 +1209,8 @@ IŠSKIRTINUMAS
             <h2 style={{ fontSize:"1.5rem", fontWeight:700, marginBottom:"0.5rem" }}>Vengtini ingredientai</h2>
             <p style={{ fontSize:"0.82rem", opacity:0.5, marginBottom:"1.8rem" }}>Nebūtina</p>
             <div style={{ display:"flex", flexWrap:"wrap", gap:"0.55rem", marginBottom:"3rem" }}>
-              {t.avoid.map(av => (
-                <button key={t} className={"chip"+(form.avoid.includes(av)?" sel":"")} onClick={()=>toggle("avoid",av)}>{t}</button>
+              {AVOID_OPTIONS.map(t => (
+                <button key={t} className={"chip"+(form.avoid.includes(t)?" sel":"")} onClick={()=>toggle("avoid",t)}>{t}</button>
               ))}
             </div>
             <div style={{ display:"flex", gap:"1rem" }}>
@@ -1737,7 +1340,7 @@ IŠSKIRTINUMAS
                       <div style={{ fontFamily:"'Afacad',sans-serif", fontSize:"1.4rem", fontWeight:700, color:C.red }}>{"~" + Math.round(formulaTotal + pkgTotal).toLocaleString("lt-LT") + " EUR"}</div>
                     </div>
                   </div>
-                  <div style={{ padding:"0.6rem 1.4rem", fontSize:"0.72rem", opacity:0.35, lineHeight:1.5, borderTop:"1px solid rgba(0,0,0,0.05)" }}>{t.pkgCompat}</div>
+                  <div style={{ padding:"0.6rem 1.4rem", fontSize:"0.72rem", opacity:0.35, lineHeight:1.5, borderTop:"1px solid rgba(0,0,0,0.05)" }}>Suderinamumas su formuluote bus patvirtintas konsultacijos metu.</div>
                 </div>
               );
             })()}
@@ -1750,28 +1353,12 @@ IŠSKIRTINUMAS
             </div>
 
             <div style={{ marginTop:"2rem", display:"flex", gap:"1rem", flexWrap:"wrap" }}>
-              <button className="btn" onClick={reset}>{t.btnNew}</button>
-              <button className="btn ghost" onClick={()=>navigator.clipboard&&navigator.clipboard.writeText(result)}>{t.btnCopy}</button>
-              <button className="btn" onClick={()=>{setShowSample(true);setShowWaitlist(false);}} style={{ background: C.black }}>🧪 {t.btnSample}</button>
-              <button className="btn ghost" onClick={()=>{setShowWaitlist(true);setShowSample(false);}}>⏳ {t.btnJoinWaitlist}</button>
+              <button className="btn" onClick={reset}>{"Nauja formule \u2192"}</button>
+              <button className="btn ghost" onClick={()=>navigator.clipboard&&navigator.clipboard.writeText(result)}>{"Kopijuoti"}</button>
             </div>
 
-            {/* SAMPLE REQUEST */}
-            {showSample && (
-              <div style={{ marginTop: '2rem' }}>
-                <SampleRequest t={t} C={C} pricing={pricing} form={form} onClose={()=>setShowSample(false)} />
-              </div>
-            )}
-
-            {/* WAITLIST */}
-            {showWaitlist && (
-              <div style={{ marginTop: '2rem' }}>
-                <Waitlist t={t} C={C} onClose={()=>setShowWaitlist(false)} />
-              </div>
-            )}
-
             {/* EARNINGS CALCULATOR */}
-            <EarningsCalc costPerUnit={pricing.pricePerUnit} qty={pricing.qty} packaging={packaging} selectedSizes={selectedSizes} t={t} />
+            <EarningsCalc costPerUnit={pricing.pricePerUnit} qty={pricing.qty} packaging={packaging} selectedSizes={selectedSizes} />
           </div>
         )}
 
