@@ -482,10 +482,6 @@ export default function App() {
   const [loading, setLoading] = useState(false);
   const [showSample, setShowSample] = useState(false);
   const [showWaitlist, setShowWaitlist] = useState(false);
-  const [showLeadForm, setShowLeadForm] = useState(false);
-  const [leadCaptured, setLeadCaptured] = useState(false);
-  const [leadName, setLeadName] = useState("");
-  const [leadPhone, setLeadPhone] = useState("");
   const topRef = useRef(null);
 
   const toggle = (field, val) => setForm(f => ({
@@ -510,11 +506,7 @@ export default function App() {
 
   const STEP_LABELS = ["", "Product type", ctx.label, "Effects", "Ingredients", "Quantity & price", "Packaging (EVC)", "Additional info"];
 
-  const submitWithLead = () => {
-    if (!leadCaptured) { setShowLeadForm(true); } else { submit(); }
-  };
-
-  const submit = async () => {
+const submit = async () => {
     setLoading(true);
     setResult(null);
 
@@ -849,7 +841,7 @@ Be specific, professional, and realistic. Concentrations must be scientifically 
             {loading && [100, 100, 60].map((w, i) => <div key={i} className="sk" style={{ height: "10px", width: w + "%" }} />)}
             <div style={{ display: "flex", gap: "1rem", marginTop: "0.5rem" }}>
               <button className="btn ghost" onClick={() => setStep(6)} disabled={loading}>← Back</button>
-              <button className="btn" onClick={submitWithLead} disabled={loading}>{loading ? `Formulating ${form.types.length > 1 ? form.types.length + " products" : form.types[0] || ""}...` : "Get direction →"}</button>
+              <button className="btn" onClick={submit} disabled={loading}>{loading ? `Formulating ${form.types.length > 1 ? form.types.length + " products" : form.types[0] || ""}...` : "Get direction →"}</button>
             </div>
           </div>
         )}
@@ -893,29 +885,6 @@ Be specific, professional, and realistic. Concentrations must be scientifically 
             {showSample && <SampleRequest pricing={pricing} form={form} catLabel={catLabel()} onClose={() => setShowSample(false)} />}
             {showWaitlist && <Waitlist onClose={() => setShowWaitlist(false)} />}
 
-        {showLeadForm && (
-          <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.55)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 999, padding: "1.5rem" }}>
-            <div style={{ background: C.cream, maxWidth: "400px", width: "100%", padding: "2rem" }}>
-              <div style={{ fontSize: "0.62rem", letterSpacing: "0.15em", textTransform: "uppercase", color: C.red, fontWeight: 700, marginBottom: "0.4rem" }}>the very lab</div>
-              <div style={{ fontSize: "1.35rem", fontWeight: 700, marginBottom: "0.3rem" }}>One last step</div>
-              <p style={{ fontSize: "0.85rem", opacity: 0.6, lineHeight: 1.6, marginBottom: "1.5rem" }}>Leave your details and we'll send you the formulation direction.</p>
-              <div style={{ display: "flex", flexDirection: "column", gap: "0.9rem", marginBottom: "1.5rem" }}>
-                <div>
-                  <div style={{ fontSize: "0.68rem", opacity: 0.5, marginBottom: "0.3rem", letterSpacing: "0.08em", textTransform: "uppercase" }}>Full name *</div>
-                  <input type="text" value={leadName} onChange={e => setLeadName(e.target.value)} placeholder="Jonas Jonaitis" style={{ borderRadius: 0 }} />
-                </div>
-                <div>
-                  <div style={{ fontSize: "0.68rem", opacity: 0.5, marginBottom: "0.3rem", letterSpacing: "0.08em", textTransform: "uppercase" }}>Phone number *</div>
-                  <input type="tel" value={leadPhone} onChange={e => setLeadPhone(e.target.value)} placeholder="+370 600 00000" style={{ borderRadius: 0 }} />
-                </div>
-              </div>
-              <div style={{ display: "flex", gap: "0.8rem" }}>
-                <button className="btn ghost" onClick={() => setShowLeadForm(false)}>Cancel</button>
-                <button className="btn" disabled={!leadName || !leadPhone} onClick={() => { setLeadCaptured(true); setShowLeadForm(false); submit(); }}>Get direction →</button>
-              </div>
-            </div>
-          </div>
-        )}
           </div>
         )}
 
