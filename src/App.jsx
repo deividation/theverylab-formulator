@@ -389,9 +389,10 @@ function ProjectTracker({ onClose }) {
 }
 
 // ─── EARNINGS CALCULATOR ──────────────────────────────────────────────────────
-function EarningsCalc({ costPerUnit, qty }) {
+function EarningsCalc({ costPerUnit, qty, typesCount = 1 }) {
   const [sellPrice, setSellPrice] = useState(0);
   const [segIdx, setSegIdx] = useState(1);
+  const n = Math.max(1, typesCount);
 
   const segs = [
     { label: "Mass market / FMCG",  range: "€15–18",  margin: "~€6–9/unit"  },
@@ -403,8 +404,10 @@ function EarningsCalc({ costPerUnit, qty }) {
 
   const profit = sellPrice > 0 ? (sellPrice - costPerUnit).toFixed(2) : null;
   const margin = sellPrice > 0 ? Math.round(((sellPrice - costPerUnit) / sellPrice) * 100) : null;
-  const revenue = sellPrice > 0 && qty > 0 ? Math.round(sellPrice * qty) : null;
-  const netProfit = sellPrice > 0 && qty > 0 ? Math.round((sellPrice - costPerUnit) * qty) : null;
+  const revenuePerProduct = sellPrice > 0 && qty > 0 ? Math.round(sellPrice * qty) : null;
+  const netProfitPerProduct = sellPrice > 0 && qty > 0 ? Math.round((sellPrice - costPerUnit) * qty) : null;
+  const revenueTotal = revenuePerProduct ? revenuePerProduct * n : null;
+  const netProfitTotal = netProfitPerProduct ? netProfitPerProduct * n : null;
   const breakEven = sellPrice > 0 && costPerUnit > 0 ? Math.ceil((costPerUnit * (qty || 500)) / (sellPrice - costPerUnit)) : null;
 
   return (
@@ -433,19 +436,33 @@ function EarningsCalc({ costPerUnit, qty }) {
       </div>
 
       {profit !== null && costPerUnit > 0 && (
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(130px, 1fr))", gap: "0.8rem" }}>
-          {[
-            { label: "Profit / unit", value: `€${profit}`, highlight: parseFloat(profit) > 0 },
-            { label: "Margin", value: `${margin}%`, highlight: margin > 0 },
-            { label: "Total revenue", value: revenue ? `~€${revenue.toLocaleString()}` : "—" },
-            { label: "Net profit", value: netProfit ? `~€${netProfit.toLocaleString()}` : "—", highlight: netProfit > 0 },
-          ].map(({ label, value, highlight }) => (
-            <div key={label} style={{ border: `1.5px solid rgba(0,0,0,0.08)`, padding: "0.9rem 1rem", background: C.white }}>
-              <div style={{ fontSize: "0.6rem", opacity: 0.4, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: "0.4rem" }}>{label}</div>
-              <div style={{ fontSize: "1.2rem", fontWeight: 700, color: highlight ? C.red : C.black }}>{value}</div>
+        <>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(130px, 1fr))", gap: "0.8rem" }}>
+            {[
+              { label: "Profit / unit", value: `€${profit}`, highlight: parseFloat(profit) > 0 },
+              { label: "Margin", value: `${margin}%`, highlight: margin > 0 },
+              { label: n > 1 ? "Revenue / product" : "Total revenue", value: revenuePerProduct ? `~€${revenuePerProduct.toLocaleString()}` : "—" },
+              { label: n > 1 ? "Net profit / product" : "Net profit", value: netProfitPerProduct ? `~€${netProfitPerProduct.toLocaleString()}` : "—", highlight: netProfitPerProduct > 0 },
+            ].map(({ label, value, highlight }) => (
+              <div key={label} style={{ border: `1.5px solid rgba(0,0,0,0.08)`, padding: "0.9rem 1rem", background: C.white }}>
+                <div style={{ fontSize: "0.6rem", opacity: 0.4, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: "0.4rem" }}>{label}</div>
+                <div style={{ fontSize: "1.2rem", fontWeight: 700, color: highlight ? C.red : C.black }}>{value}</div>
+              </div>
+            ))}
+          </div>
+          {n > 1 && revenueTotal && (
+            <div style={{ marginTop: "0.8rem", background: C.pink, borderLeft: `3px solid ${C.red}`, padding: "0.8rem 1rem", display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.5rem" }}>
+              <div>
+                <div style={{ fontSize: "0.6rem", opacity: 0.5, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: "0.2rem" }}>Full line revenue ({n} products)</div>
+                <div style={{ fontSize: "1.1rem", fontWeight: 700 }}>~€{revenueTotal.toLocaleString()}</div>
+              </div>
+              <div>
+                <div style={{ fontSize: "0.6rem", opacity: 0.5, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: "0.2rem" }}>Full line net profit</div>
+                <div style={{ fontSize: "1.1rem", fontWeight: 700, color: C.red }}>~€{netProfitTotal?.toLocaleString()}</div>
+              </div>
             </div>
-          ))}
-        </div>
+          )}
+        </>
       )}
       {breakEven !== null && breakEven > 0 && (
         <div style={{ marginTop: "0.8rem", fontSize: "0.78rem", opacity: 0.5 }}>
@@ -707,16 +724,26 @@ Complies with EU Regulation (EC) No. 1223/2009. pH 5.5–6.0. 24-month shelf lif
                   </div>
                 </div>
                 <div style={{ textAlign: "right" }}>
+                  {form.types.length > 1 && (
+                    <div style={{ fontSize: "0.75rem", opacity: 0.7, marginBottom: "0.3rem" }}>
+                      {form.types.length} products × {(pricing.qty || 500).toLocaleString()} units = {((pricing.qty || 500) * form.types.length).toLocaleString()} units total
+                    </div>
+                  )}
                   <div style={{ fontSize: "0.62rem", letterSpacing: "0.15em", textTransform: "uppercase", opacity: 0.65, marginBottom: "0.4rem" }}>Total amount</div>
                   <div style={{ fontFamily: "'Afacad',sans-serif", fontSize: "clamp(1.6rem,4vw,2.2rem)", fontWeight: 700, lineHeight: 1 }}>
-                    ~{Math.round((pricing.qty || 500) * getPrice(pricing.qty || 500)).toLocaleString()}<span style={{ fontSize: "0.9rem", fontWeight: 400, marginLeft: "0.3rem", opacity: 0.75 }}>EUR</span>
+                    ~{Math.round((pricing.qty || 500) * getPrice(pricing.qty || 500) * Math.max(1, form.types.length)).toLocaleString()}<span style={{ fontSize: "0.9rem", fontWeight: 400, marginLeft: "0.3rem", opacity: 0.75 }}>EUR</span>
                   </div>
                 </div>
               </div>
+              {form.types.length > 1 && (
+                <div style={{ marginTop: "1rem", paddingTop: "0.8rem", borderTop: "1px solid rgba(255,255,255,0.15)", fontSize: "0.72rem", opacity: 0.7 }}>
+                  Per product: ~{Math.round((pricing.qty || 500) * getPrice(pricing.qty || 500)).toLocaleString()} EUR · {form.types.slice(0, 3).join(", ")}{form.types.length > 3 ? ` +${form.types.length - 3} more` : ""}
+                </div>
+              )}
             </div>
             <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap", marginBottom: "2rem" }}>
               {PRICE_TIERS.map(tier => (
-                <button key={tier.qty} onClick={() => setPricing({ qty: tier.qty, pricePerUnit: tier.price, total: Math.round(tier.qty * tier.price) })}
+                <button key={tier.qty} onClick={() => setPricing({ qty: tier.qty, pricePerUnit: tier.price, total: Math.round(tier.qty * tier.price * Math.max(1, form.types.length)) })}
                   style={{ padding: "0.6rem 1rem", fontSize: "0.82rem", fontFamily: "'Afacad',sans-serif", border: "1.5px solid " + (pricing.qty === tier.qty ? C.red : "rgba(0,0,0,0.12)"), background: pricing.qty === tier.qty ? C.red : C.white, color: pricing.qty === tier.qty ? C.white : C.black, cursor: "pointer", transition: "all 0.15s" }}>
                   {tier.label} — {tier.price.toFixed(2)} EUR
                 </button>
@@ -790,7 +817,7 @@ Complies with EU Regulation (EC) No. 1223/2009. pH 5.5–6.0. 24-month shelf lif
                   <div style={{ background: C.black, color: C.white, padding: "1rem 1.8rem", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "1rem" }}>
                     <div><div style={{ fontSize: "0.62rem", opacity: 0.5, textTransform: "uppercase", letterSpacing: "0.1em" }}>Quantity</div><div style={{ fontWeight: 600 }}>{pricing.qty.toLocaleString()} units</div></div>
                     <div><div style={{ fontSize: "0.62rem", opacity: 0.5, textTransform: "uppercase", letterSpacing: "0.1em" }}>Price / unit</div><div style={{ fontWeight: 600 }}>{pricing.pricePerUnit.toFixed(2)} EUR</div></div>
-                    <div style={{ textAlign: "right" }}><div style={{ fontSize: "0.62rem", opacity: 0.5, textTransform: "uppercase", letterSpacing: "0.1em" }}>Total</div><div style={{ fontSize: "1.3rem", fontWeight: 700, color: C.pinkMid }}>~{pricing.total.toLocaleString()} EUR</div></div>
+                    <div style={{ textAlign: "right" }}><div style={{ fontSize: "0.62rem", opacity: 0.5, textTransform: "uppercase", letterSpacing: "0.1em" }}>Total{form.types.length > 1 ? ` (${form.types.length} products)` : ""}</div><div style={{ fontSize: "1.3rem", fontWeight: 700, color: C.pinkMid }}>~{pricing.total.toLocaleString()} EUR</div></div>
                   </div>
                 )}
 
@@ -807,7 +834,7 @@ Complies with EU Regulation (EC) No. 1223/2009. pH 5.5–6.0. 24-month shelf lif
                   <button className="btn ghost" onClick={() => { setShowWaitlist(true); setShowSample(false); }}>⬟ Track my project →</button>
                 </div>
 
-                <EarningsCalc costPerUnit={costPerUnit} qty={pricing.qty} />
+                <EarningsCalc costPerUnit={costPerUnit} qty={pricing.qty} typesCount={form.types.length} />
               </>
             )}
 
