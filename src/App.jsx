@@ -510,20 +510,43 @@ export default function App() {
     setLoading(true);
     setResult(null);
     await new Promise(r => setTimeout(r, 1800));
-    const mock = `FORMULATION DIRECTION
-Formula created for ${form.types.join(", ")} — ${catLabel()} category.
 
-ACTIVE INGREDIENTS
-- Niacinamide 5% — pore minimizing, brightening
-- Hyaluronic Acid 2% — intensive moisturizing
-- Vitamin C 3% — antioxidant, brightening
-- Panthenol 1% — barrier strengthening
+    const INGREDIENTS = {
+      "Serum":       ["Niacinamide 5% - pore minimizing, brightening", "Hyaluronic Acid 2% - intensive moisturizing", "Vitamin C 3% - antioxidant, brightening", "Panthenol 1% - barrier strengthening"],
+      "Face cream":  ["Shea Butter 5% - deep nourishment", "Ceramide NP 1% - barrier repair", "Squalane 3% - lightweight moisturizing", "Allantoin 0.5% - soothing"],
+      "Eye cream":   ["Caffeine 2% - depuffing, circulation", "Peptide complex 1% - anti-aging", "Hyaluronic Acid 1% - plumping", "Vitamin K 0.5% - dark circles"],
+      "Toner":       ["Niacinamide 3% - pore refining", "AHA complex 5% - gentle exfoliation", "Aloe Vera 10% - soothing", "Panthenol 1% - hydrating"],
+      "Face oil":    ["Rosehip oil 30% - regenerating", "Sea buckthorn 5% - brightening", "Vitamin E 1% - antioxidant", "Bakuchiol 1% - anti-aging"],
+      "Mask":        ["Kaolin clay 10% - purifying", "Hyaluronic Acid 2% - moisturizing", "Tea tree 0.5% - antibacterial", "Glycerin 5% - hydrating"],
+      "Body lotion": ["Shea Butter 8% - rich nourishment", "Glycerin 5% - humectant", "Vitamin E 1% - antioxidant", "Ceramide 0.5% - barrier"],
+      "Body butter": ["Cocoa Butter 20% - intensive nourishment", "Shea Butter 15% - softening", "Sweet Almond Oil 10% - conditioning", "Vitamin E 1% - antioxidant"],
+      "Hand cream":  ["Shea Butter 10% - intensive repair", "Glycerin 8% - humectant", "Allantoin 0.5% - soothing", "Panthenol 2% - healing"],
+      "Lip balm":    ["Beeswax 15% - protective barrier", "Castor Oil 20% - moisturizing", "Shea Butter 10% - nourishing", "Vitamin E 1% - antioxidant"],
+      "Beard oil":   ["Argan Oil 40% - conditioning", "Jojoba Oil 30% - moisturizing", "Vitamin E 1% - antioxidant", "Cedarwood EO 0.5% - scent"],
+      "Beard balm":  ["Beeswax 10% - hold & structure", "Shea Butter 20% - conditioning", "Argan Oil 15% - nourishing", "Vitamin E 1% - antioxidant"],
+      "Shampoo":     ["Sodium Coco Sulfate 10% - cleansing", "Panthenol 1% - strengthening", "Hydrolyzed Keratin 2% - repair", "Glycerin 3% - moisturizing"],
+      "Conditioner": ["Cetyl Alcohol 5% - conditioning", "BTMS-50 3% - detangling", "Argan Oil 3% - nourishing", "Panthenol 2% - strengthening"],
+    };
+    const DEFAULT_ING = ["Active complex 3% - targeted action", "Hyaluronic Acid 1% - moisturizing", "Glycerin 5% - humectant", "Panthenol 1% - soothing"];
 
-BASE FORMULA
-Aqua, Glycerin, Niacinamide, Sodium Hyaluronate, Ascorbic Acid, Panthenol, Tocopheryl Acetate, Allantoin, Xanthan Gum, Phenoxyethanol.
+    const sections = form.types.map(product => {
+      const ing = INGREDIENTS[product] || DEFAULT_ING;
+      return [
+        `--- ${product.toUpperCase()} ---`,
+        `ACTIVE INGREDIENTS`,
+        ing.map(i => `- ${i}`).join("\n"),
+        ``,
+        `BASE FORMULA`,
+        `Aqua, Glycerin, ${ing[0].split("-")[0].trim()}, Panthenol, Tocopheryl Acetate, Allantoin, Phenoxyethanol.`,
+        ``,
+        `REGULATORY NOTES`,
+        `Complies with EU Regulation (EC) No. 1223/2009. pH 5.5-6.5. 24-month shelf life.`,
+      ].join("\n");
+    });
 
-REGULATORY NOTES
-Complies with EU Regulation (EC) No. 1223/2009. pH 5.5–6.0. 24-month shelf life.`;
+    const header = `FORMULATION DIRECTION\n${catLabel()} product line: ${form.types.join(", ")}\nSkin: ${form.skin.join(", ")} | Effects: ${form.effects.join(", ")}`;
+    const mock = [header, ...sections].join("\n\n");
+
     setResult(mock);
     setLoading(false);
     setStep(8);
