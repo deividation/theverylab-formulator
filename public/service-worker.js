@@ -1,26 +1,21 @@
-const CACHE = 'tvl-v1';
-const ASSETS = ['/', '/index.html', '/static/js/main.js', '/static/css/main.css'];
-
-self.addEventListener('install', e => {
-  e.waitUntil(caches.open(CACHE).then(c => c.addAll(['/', '/index.html'])));
-  self.skipWaiting();
-});
+// Self-destruct service worker.
+// Old SW was cache-first and locked stale bundles on mobile devices.
+// On next visit, browser fetches this file, sees it differs from registered SW,
+// installs + activates it. Activate deletes caches, unregisters, reloads clients.
+self.addEventListener('install', e => { self.skipWaiting(); });
 
 self.addEventListener('activate', e => {
-  e.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))));
-  self.clients.claim();
+  e.waitUntil((async () => {
+    try {
+      const keys = await caches.keys();
+      await Promise.all(keys.map(k => caches.delete(k)));
+      await self.registration.unregister();
+      const clients = await self.clients.matchAll({ type: 'window' });
+      clients.forEach(c => { try { c.navigate(c.url); } catch (_) {} });
+    } catch (err) {
+      console.warn('sw self-destruct error', err);
+    }
+  })());
 });
 
-self.addEventListener('fetch', e => {
-  if (e.request.method !== 'GET') return;
-  if (e.request.url.includes('api.anthropic.com')) return;
-  e.respondWith(
-    caches.match(e.request).then(cached => cached || fetch(e.request).then(resp => {
-      if (resp.status === 200) {
-        const clone = resp.clone();
-        caches.open(CACHE).then(c => c.put(e.request, clone));
-      }
-      return resp;
-    }).catch(() => caches.match('/index.html')))
-  );
-});
+// No fetch handler — all requests go straight to network (bypass SW entirely).
