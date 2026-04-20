@@ -914,7 +914,7 @@ Be specific, professional, and realistic. Concentrations must be scientifically 
               <button className="btn ghost" onClick={() => setShowLeadForm(false)}>Cancel</button>
               <button className="btn" disabled={false} onClick={() => {
                 setLeadDone(true); setShowLeadForm(false);
-                fetch('https://api.emailjs.com/api/v1.0/email/send',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({service_id:'service_gm2rwtf',template_id:'template_kokwtbj',user_id:'HTYnH2QkvOWixD-we',template_params:{from_name:leadName,email:leadEmail,phone:leadPhone,category:catLabel(),products:form.types.join(', '),quantity:pricing.qty>0?pricing.qty+' units':'-'}})}).catch(()=>{});
+                fetch('https://api.emailjs.com/api/v1.0/email/send',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({service_id:'service_6vlec4n',template_id:'template_kokwtbj',user_id:'HTYnH2QkvOWixD-we',template_params:{from_name:leadName,email:leadEmail,phone:leadPhone,category:catLabel(),products:form.types.join(', '),quantity:pricing.qty>0?pricing.qty+' units':'-'}})}).catch(()=>{});
                 submit();
               }}>Get direction →</button>
             </div>
@@ -948,7 +948,7 @@ Be specific, professional, and realistic. Concentrations must be scientifically 
             </div>
             <div style={{ display: "flex", gap: "1rem" }}>
               <button className="btn ghost" onClick={() => setShowLeadForm(false)}>Cancel</button>
-              <button className="btn" disabled={!leadName||!leadPhone||!leadEmail} onClick={() => { if(!leadName.trim()||!leadPhone.trim())return; setLeadDone(true); setShowLeadForm(false); fetch('https://api.emailjs.com/api/v1.0/email/send',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({service_id:'service_dfyzcmr',template_id:'template_kokwtbj',user_id:'HTYnH2QkvOWixD-we',template_params:{from_name:leadName,email:leadEmail,phone:leadPhone,category:catLabel(),products:form.types.join(', '),quantity:pricing.qty>0?pricing.qty+' units':'-'}})}).catch(()=>{}); submit(); }}>Get direction →</button>
+              <button className="btn" disabled={!leadName||!leadPhone||!leadEmail} onClick={() => { if(!leadName.trim()||!leadPhone.trim())return; setLeadDone(true); setShowLeadForm(false); fetch('https://api.emailjs.com/api/v1.0/email/send',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({service_id:'service_6vlec4n',template_id:'template_kokwtbj',user_id:'HTYnH2QkvOWixD-we',template_params:{from_name:leadName,email:leadEmail,phone:leadPhone,category:catLabel(),products:form.types.join(', '),quantity:pricing.qty>0?pricing.qty+' units':'-'}})}).catch(()=>{}); submit(); }}>Get direction →</button>
             </div>
           </div>
         </div>
