@@ -836,10 +836,11 @@ Be specific, professional, and realistic. Concentrations must be scientifically 
               <div><span style={{ opacity: 0.45, fontSize: "0.72rem", marginRight: "0.5rem" }}>Products</span>{form.types.join(", ")}</div>
               {form.skin.length > 0 && <div><span style={{ opacity: 0.45, fontSize: "0.72rem", marginRight: "0.5rem" }}>{ctx.label}</span>{form.skin.join(", ")}</div>}
               <div><span style={{ opacity: 0.45, fontSize: "0.72rem", marginRight: "0.5rem" }}>Effects</span>{form.effects.join(", ")}</div>
+              {pricing.qty === 0 && <div style={{ marginTop: "0.5rem", paddingTop: "0.6rem", borderTop: "1px solid rgba(0,0,0,0.08)" }}><span style={{ opacity: 0.45, fontSize: "0.72rem", marginRight: "0.5rem" }}>Pricing</span><span style={{ opacity: 0.6 }}>from €3.70/unit · volume-based</span></div>}
               {pricing.qty > 0 && (
                 <div style={{ marginTop: "0.5rem", paddingTop: "0.6rem", borderTop: "1px solid rgba(0,0,0,0.07)" }}>
                   <span style={{ opacity: 0.45, fontSize: "0.72rem", marginRight: "0.5rem" }}>Quantity</span>
-                  {pricing.qty} units <span style={{ marginLeft: "1rem", color: C.red, fontWeight: 700 }}>~{pricing.total.toLocaleString()} EUR</span>
+                  {pricing.qty.toLocaleString()} × €{pricing.pricePerUnit.toFixed(2)}{form.types.length > 1 ? " × " + form.types.length + " products" : ""} <span style={{ marginLeft: "1rem", color: C.red, fontWeight: 700 }}>~€{pricing.total.toLocaleString()}</span>
                 </div>
               )}
             </div>
