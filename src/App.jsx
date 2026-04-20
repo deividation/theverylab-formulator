@@ -488,6 +488,7 @@ export default function App() {
   const [leadName, setLeadName] = useState("");
   const [leadPhone, setLeadPhone] = useState("");
   const [leadEmail, setLeadEmail] = useState("");
+  const [leadEmail, setLeadEmail] = useState("");
   const topRef = useRef(null);
 
   const toggle = (field, val) => setForm(f => ({
