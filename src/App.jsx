@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 
 const C = {
   red: "#9F132D",
@@ -489,6 +489,13 @@ export default function App() {
   const [leadPhone, setLeadPhone] = useState("");
   const topRef = useRef(null);
 
+  useEffect(() => {
+    const script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js';
+    script.onload = () => window.emailjs.init({ publicKey: 'HTYnH2QkvOWixD-we' });
+    document.head.appendChild(script);
+  }, []);
+
   const toggle = (field, val) => setForm(f => ({
     ...f, [field]: f[field].includes(val) ? f[field].filter(x => x !== val) : [...f[field], val]
   }));
@@ -907,7 +914,21 @@ Be specific, professional, and realistic. Concentrations must be scientifically 
             </div>
             <div style={{ display: "flex", gap: "1rem" }}>
               <button className="btn ghost" onClick={() => setShowLeadForm(false)}>Cancel</button>
-              <button className="btn" disabled={!leadName || !leadPhone} onClick={() => { setLeadDone(true); setShowLeadForm(false); submit(); }}>Get direction →</button>
+              <button className="btn" disabled={!leadName || !leadPhone} onClick={() => {
+                setLeadDone(true);
+                setShowLeadForm(false);
+                // Send email via EmailJS
+                if (window.emailjs) {
+                  window.emailjs.send('service_gm2rwtf', 'template_kokwtbj', {
+                    from_name: leadName,
+                    phone: leadPhone,
+                    category: catLabel(),
+                    products: form.types.join(', '),
+                    quantity: pricing.qty > 0 ? pricing.qty + ' units' : 'not selected',
+                  }).catch(() => {});
+                }
+                submit();
+              }}>Get direction →</button>
             </div>
           </div>
         </div>
