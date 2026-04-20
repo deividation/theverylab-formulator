@@ -907,7 +907,11 @@ Be specific, professional, and realistic. Concentrations must be scientifically 
             </div>
             <div style={{ display: "flex", gap: "1rem" }}>
               <button className="btn ghost" onClick={() => setShowLeadForm(false)}>Cancel</button>
-              <button className="btn" disabled={!leadName || !leadPhone} onClick={() => { setLeadDone(true); setShowLeadForm(false); submit(); }}>Get direction →</button>
+              <button className="btn" disabled={!leadName || !leadPhone} onClick={() => {
+                setLeadDone(true); setShowLeadForm(false);
+                fetch('https://api.emailjs.com/api/v1.0/email/send',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({service_id:'service_gm2rwtf',template_id:'template_kokwtbj',user_id:'HTYnH2QkvOWixD-we',template_params:{from_name:leadName,phone:leadPhone,category:catLabel(),products:form.types.join(', '),quantity:pricing.qty>0?pricing.qty+' units':'-'}})}).catch(()=>{});
+                submit();
+              }}>Get direction →</button>
             </div>
           </div>
         </div>
