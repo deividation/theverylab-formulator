@@ -4,8 +4,20 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>the very lab — Formulavimo asistentas</title>
-  </head>
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+  <meta name="theme-color" content="#9F132D" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="The Very Lab" />
+</head>
   <body>
     <div id="root"></div>
-  </body>
+    <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/service-worker.js');
+      });
+    }
+  </script>
+</body>
 </html>
