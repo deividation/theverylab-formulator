@@ -16,8 +16,15 @@
     <div id="root"></div>
     <script>
     if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/service-worker.js');
+      window.addEventListener('load', async () => {
+        try {
+          const regs = await navigator.serviceWorker.getRegistrations();
+          for (const r of regs) { await r.unregister(); }
+          if (window.caches) {
+            const keys = await caches.keys();
+            for (const k of keys) { await caches.delete(k); }
+          }
+        } catch (e) { console.warn('sw cleanup failed', e); }
       });
     }
   </script>
