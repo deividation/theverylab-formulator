@@ -165,29 +165,6 @@ function SampleRequest({ pricing, form, catLabel, onClose }) {
       </div>
     </div>
 
-      {showLeadForm && (
-        <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.6)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 999, padding: "1rem" }}>
-          <div className="fade" style={{ background: C.cream, maxWidth: "400px", width: "100%", padding: "2.5rem" }}>
-            <div style={{ fontSize: "0.6rem", letterSpacing: "0.18em", textTransform: "uppercase", color: C.red, fontWeight: 700, marginBottom: "0.5rem" }}>the very lab</div>
-            <div style={{ fontSize: "1.4rem", fontWeight: 700, marginBottom: "0.3rem" }}>One last step</div>
-            <p style={{ fontSize: "0.85rem", opacity: 0.55, lineHeight: 1.65, marginBottom: "1.8rem" }}>Leave your details and we'll send you the formulation direction.</p>
-            <div style={{ display: "flex", flexDirection: "column", gap: "1rem", marginBottom: "1.8rem" }}>
-              <div>
-                <div style={{ fontSize: "0.68rem", opacity: 0.45, marginBottom: "0.3rem", letterSpacing: "0.08em", textTransform: "uppercase" }}>Full name *</div>
-                <input type="text" value={leadName} onChange={e => setLeadName(e.target.value)} placeholder="Jonas Jonaitis" />
-              </div>
-              <div>
-                <div style={{ fontSize: "0.68rem", opacity: 0.45, marginBottom: "0.3rem", letterSpacing: "0.08em", textTransform: "uppercase" }}>Phone number *</div>
-                <input type="tel" value={leadPhone} onChange={e => setLeadPhone(e.target.value)} placeholder="+370 600 00000" />
-              </div>
-            </div>
-            <div style={{ display: "flex", gap: "1rem" }}>
-              <button className="btn ghost" onClick={() => setShowLeadForm(false)}>Cancel</button>
-              <button className="btn" disabled={!leadName || !leadPhone} onClick={() => { setLeadDone(true); setShowLeadForm(false); submit(); }}>Get direction →</button>
-            </div>
-          </div>
-        </div>
-      )}
   );
 }
 
@@ -916,6 +893,30 @@ Be specific, professional, and realistic. Concentrations must be scientifically 
           </div>
         )}
 
+
+      {showLeadForm && (
+        <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.6)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 999, padding: "1rem" }}>
+          <div className="fade" style={{ background: C.cream, maxWidth: "400px", width: "100%", padding: "2.5rem" }}>
+            <div style={{ fontSize: "0.6rem", letterSpacing: "0.18em", textTransform: "uppercase", color: C.red, fontWeight: 700, marginBottom: "0.5rem" }}>the very lab</div>
+            <div style={{ fontSize: "1.4rem", fontWeight: 700, marginBottom: "0.3rem" }}>One last step</div>
+            <p style={{ fontSize: "0.85rem", opacity: 0.55, lineHeight: 1.65, marginBottom: "1.8rem" }}>Leave your details and we'll send you the formulation direction.</p>
+            <div style={{ display: "flex", flexDirection: "column", gap: "1rem", marginBottom: "1.8rem" }}>
+              <div>
+                <div style={{ fontSize: "0.68rem", opacity: 0.45, marginBottom: "0.3rem", letterSpacing: "0.08em", textTransform: "uppercase" }}>Full name *</div>
+                <input type="text" value={leadName} onChange={e => setLeadName(e.target.value)} placeholder="Jonas Jonaitis" />
+              </div>
+              <div>
+                <div style={{ fontSize: "0.68rem", opacity: 0.45, marginBottom: "0.3rem", letterSpacing: "0.08em", textTransform: "uppercase" }}>Phone number *</div>
+                <input type="tel" value={leadPhone} onChange={e => setLeadPhone(e.target.value)} placeholder="+370 600 00000" />
+              </div>
+            </div>
+            <div style={{ display: "flex", gap: "1rem" }}>
+              <button className="btn ghost" onClick={() => setShowLeadForm(false)}>Cancel</button>
+              <button className="btn" disabled={!leadName || !leadPhone} onClick={() => { setLeadDone(true); setShowLeadForm(false); submit(); }}>Get direction →</button>
+            </div>
+          </div>
+        </div>
+      )}
       </div>
     </div>
   );
