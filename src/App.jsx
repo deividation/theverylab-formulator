@@ -487,6 +487,7 @@ export default function App() {
   const [leadDone, setLeadDone] = useState(false);
   const [leadName, setLeadName] = useState("");
   const [leadPhone, setLeadPhone] = useState("");
+  const [leadEmail, setLeadEmail] = useState("");
   const topRef = useRef(null);
 
   const toggle = (field, val) => setForm(f => ({
@@ -903,6 +904,10 @@ Be specific, professional, and realistic. Concentrations must be scientifically 
               <div>
                 <div style={{ fontSize: "0.68rem", opacity: 0.45, marginBottom: "0.3rem", letterSpacing: "0.08em", textTransform: "uppercase" }}>Phone number *</div>
                 <input type="tel" value={leadPhone} onChange={e => setLeadPhone(e.target.value)} placeholder="+370 600 00000" />
+              </div>
+              <div>
+                <div style={{ fontSize: "0.68rem", opacity: 0.45, marginBottom: "0.3rem", letterSpacing: "0.08em", textTransform: "uppercase" }}>Email</div>
+                <input type="email" value={leadEmail} onChange={e => setLeadEmail(e.target.value)} placeholder="jonas@company.com" />
               </div>
             </div>
             <div style={{ display: "flex", gap: "1rem" }}>
