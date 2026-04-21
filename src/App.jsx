@@ -476,6 +476,7 @@ function EarningsCalc({ costPerUnit, qty, typesCount = 1 }) {
 
 // ─── MAIN APP ─────────────────────────────────────────────────────────────────
 export default function App() {
+  if (window.location.pathname === "/admin") return <Admin />;
   const [step, setStep] = useState(0);
   const [form, setForm] = useState({ cat: "", types: [], skin: [], effects: [], avoid: [], brief: "" });
   const [pricing, setPricing] = useState({ qty: 0, pricePerUnit: 0, total: 0 });
