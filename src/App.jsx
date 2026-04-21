@@ -602,6 +602,26 @@ Be specific, professional, and realistic. Concentrations must be scientifically 
 
   const costPerUnit = pricing.pricePerUnit;
 
+  const sendLead = () => {
+    fetch('https://api.emailjs.com/api/v1.0/email/send', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        service_id: 'service_dfyzcmr',
+        template_id: 'template_kokwtbj',
+        user_id: 'HTYnH2QkvOWixD-we',
+        template_params: {
+          from_name: leadName,
+          phone: leadPhone,
+          reply_to: leadEmail,
+          category: catLabel(),
+          products: form.types.join(', '),
+          quantity: pricing.qty > 0 ? pricing.qty + ' units' : '-',
+        },
+      }),
+    }).catch(() => {});
+  };
+
   return (
     <div style={{ minHeight: "100vh", background: C.cream, fontFamily: "'Afacad',sans-serif", color: C.black }} ref={topRef}>
       <style>{css}</style>
